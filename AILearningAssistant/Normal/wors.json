@@ -1,0 +1,192 @@
+{
+    "words": [
+        {
+            "word": "apple",
+            "meaning": "a fruit"
+        },
+        {
+            "word": "dog",
+            "meaning": "an animal"
+        },
+        {
+            "word": "cat",
+            "meaning": "a small domesticated carnivorous mammal"
+        },
+        {
+            "word": "car",
+            "meaning": "a road vehicle"
+        },
+        {
+            "word": "tree",
+            "meaning": "a perennial plant with a single stem"
+        },
+        {
+            "word": "house",
+            "meaning": "a building for human habitation"
+        },
+        {
+            "word": "pen",
+            "meaning": "a writing instrument"
+        },
+        {
+            "word": "paper",
+            "meaning": "a material for writing or printing"
+        },
+        {
+            "word": "book",
+            "meaning": "a written or printed work"
+        },
+        {
+            "word": "chair",
+            "meaning": "a piece of furniture for sitting"
+        },
+        {
+            "word": "table",
+            "meaning": "a piece of furniture with a flat surface"
+        },
+        {
+            "word": "phone",
+            "meaning": "a device for communicating"
+        },
+        {
+            "word": "computer",
+            "meaning": "an electronic device for processing data"
+        },
+        {
+            "word": "music",
+            "meaning": "an art form consisting of sound and silence"
+        },
+        {
+            "word": "movie",
+            "meaning": "a series of moving images"
+        },
+        {
+            "word": "game",
+            "meaning": "an activity or contest with rules"
+        },
+        {
+            "word": "sport",
+            "meaning": "a physical activity or competition"
+        },
+        {
+            "word": "food",
+            "meaning": "anything that is eaten to sustain life"
+        },
+        {
+            "word": "water",
+            "meaning": "a liquid substance"
+        },
+        {
+            "word": "fire",
+            "meaning": "the rapid oxidation of a material"
+        },
+        {
+            "word": "earth",
+            "meaning": "the planet we live on"
+        },
+        {
+            "word": "sun",
+            "meaning": "the star at the center of our solar system"
+        },
+        {
+            "word": "moon",
+            "meaning": "the natural satellite of the earth"
+        },
+        {
+            "word": "star",
+            "meaning": "a massive ball of hot, glowing gas"
+        },
+        {
+            "word": "river",
+            "meaning": "a natural flowing body of water"
+        },
+        {
+            "word": "lake",
+            "meaning": "a body of water surrounded by land"
+        },
+        {
+            "word": "ocean",
+            "meaning": "a vast body of saltwater"
+        },
+        {
+            "word": "mountain",
+            "meaning": "a natural elevation of the earth's surface"
+        },
+        {
+            "word": "valley",
+            "meaning": "a low area of land between hills or mountains"
+        },
+        {
+            "word": "city",
+            "meaning": "a large human settlement"
+        },
+        {
+            "word": "town",
+            "meaning": "a smaller human settlement"
+        },
+        {
+            "word": "village",
+            "meaning": "a small human settlement"
+        },
+        {
+            "word": "school",
+            "meaning": "an institution for education"
+        },
+        {
+            "word": "university",
+            "meaning": "an institution for higher education"
+        },
+        {
+            "word": "library",
+            "meaning": "a collection of books and other written materials"
+        },
+        {
+            "word": "hospital",
+            "meaning": "an institution for medical care"
+        },
+        {
+            "word": "doctor",
+            "meaning": "a person trained to practice medicine"
+        },
+        {
+            "word": "nurse",
+            "meaning": "a person trained to care for the sick or injured"
+        },
+        {
+            "word": "teacher",
+            "meaning": "a person who educates others"
+        },
+        {
+            "word": "student",
+            "meaning": "a person who is learning"
+        },
+        {
+            "word": "engineer",
+            "meaning": "a person who designs and builds machines or structures"
+        },
+        {
+            "word": "lawyer",
+            "meaning": "a person who practices law"
+        },
+        {
+            "word": "artist",
+            "meaning": "a person who creates art"
+        },
+        {
+            "word": "musician",
+            "meaning": "a person who plays music"
+        },
+        {
+            "word": "writer",
+            "meaning": "a person who writes books or articles"
+        },
+        {
+            "word": "actor",
+            "meaning": "a person who performs in plays or movies"
+        },
+        {
+            "word": "athlete",
+            "meaning": "a person who competes in sports"
+        }
+    ]
+}
