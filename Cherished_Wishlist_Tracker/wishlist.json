@@ -1,0 +1,27 @@
+{
+    "Apple Watch": {
+        "price": 299.99,
+        "link": "https://www.amazon.com/Apple-Watch-Series-7-GPS/dp/B09DTCRYHT/",
+        "product_id": "B09DTCRYHT"
+    },
+    "Nike Running Shoes": {
+        "price": 129.99,
+        "link": "https://www.amazon.com/Nike-Running-Shoes-Men/dp/B07B9R7RYG/",
+        "product_id": "B07B9R7RYG"
+    },
+    "Amazon Echo Dot": {
+        "price": 49.99,
+        "link": "https://www.amazon.com/Amazon-Echo-Dot-4th-Gen/dp/B07FZ8S74R/",
+        "product_id": "B07FZ8S74R"
+    },
+    "Sony Wireless Headphones": {
+        "price": 349.99,
+        "link": "https://www.amazon.com/Sony-Wireless-Noise-Canceling-Headphones/dp/B07D74RKQR/",
+        "product_id": "B07D74RKQR"
+    },
+    "Samsung Galaxy Watch": {
+        "price": 279.99,
+        "link": "https://www.amazon.com/Samsung-Galaxy-Watch-Active2/dp/B07D74RKQT/",
+        "product_id": "B07D74RKQT"
+    }
+}
