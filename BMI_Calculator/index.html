@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>BMI Calculator</h1>
+        <form method="POST">
+            <label for="weight">Weight (in kg):</label>
+            <input type="number" id="weight" name="weight" required>
+            <label for="height">Height (in meters):</label>
+            <input type="number" id="height" name="height" required>
+            <button type="submit">Calculate BMI</button>
+        </form>
+        {% if bmi %}
+            <p>Your BMI is: {{ bmi:.2f }}</p>
+            {% if bmi < 18.5 %}
+                <p>You are underweight.</p>
+            {% elif bmi < 25 %}
+                <p>You are normal weight.</p>
+            {% elif bmi < 30 %}
+                <p>You are overweight.</p>
+            {% else %}
+                <p>You are obese.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+    "subjects": [
+        "cat",
+        "dog",
+        "elephant",
+        "monkey",
+        "parrot"
+    ],
+    "actions": [
+        "went to the party",
+        "ate a sandwich",
+        "played the guitar",
+        "danced in the rain",
+        "rode a bike"
+    ],
+    "reasons": [
+        "because it was feeling happy",
+        "because it was feeling curious",
+        "because it was feeling adventurous",
+        "because it was feeling silly",
+        "because it was feeling creative"
+    ],
+    "joke_types": [
+        "animal",
+        "food",
+        "travel",
+        "sports"
+    ],
+    "joke_prompts": {
+        "animal": "Generate a joke about animals",
+        "food": "Generate a joke about food",
+        "travel": "Generate a joke about travel",
+        "sports": "Generate a joke about sports"
+    }
+}
