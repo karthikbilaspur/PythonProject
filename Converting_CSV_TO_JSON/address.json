@@ -1,0 +1,7 @@
+{
+    "fields": {
+        "name": "string",
+        "age": "integer",
+        "address": "string"
+    }
+}
