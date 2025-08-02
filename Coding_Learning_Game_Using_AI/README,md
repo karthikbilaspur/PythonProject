@@ -1,0 +1,10 @@
+# The CodingGame
+
+class contains a dictionary of questions and answers.
+The play method asks the user the questions and checks their answers.
+The AI class can learn new questions and answers.
+The main function allows the user to play the game or teach the AI.
+Tips:
+You can add more questions and answers to the game.
+You can improve the AI's ability to answer questions by using machine learning algorithms.
+You can also add more features to the game, such as different levels of difficulty or a high score tracker.

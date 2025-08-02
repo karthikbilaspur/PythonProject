@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Complaint Management System</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{% url 'submit_complaint' %}">Submit Complaint</a></li>
+            <li><a href="{% url 'view_complaints' %}">View Complaints</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
