@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Orders</h1>
+    <form class="order-filter-form">
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="">All</option>
+            <option value="pending">Pending</option>
+            <option value="shipped">Shipped</option>
+        </select>
+        <label for="date_from">Date From:</label>
+        <input type="date" id="date_from" name="date_from">
+        <label for="date_to">Date To:</label>
+        <input type="date" id="date_to" name="date_to">
+        <button type="submit">Filter</button>
+    </form>
+    <ul id="orders" class="order-list">
+        {% for order in orders %}
+            <li>Order ID: {{ order.order_id }} - Status: {{ order.status }}</li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        const form = document.querySelector(".order-filter-form");
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const status = document.getElementById("status").value;
+            const dateFrom = document.getElementById("date_from").value;
+            const dateTo = document.getElementById("date_to").value;
+            fetch(`/orders/filter?status=${status}&date_from=${dateFrom}&date_to=${dateTo}`)
+                .then(response => response.json())
+                .then(data => {
+                    const ordersList = document.getElementById("orders");
+                    ordersList.innerHTML = "";
+                    data.forEach(order => {
+                        const orderListItem = document.createElement("li");
+                        orderListItem.textContent = `Order ID: ${order.order_id} - Status: ${order.status}`;
+                        ordersList.appendChild(orderListItem);
+                    });
+                });
+        });
+    </script>
+{% endblock %}

@@ -1,4 +1,5 @@
-2048 Game
+# 2048 Game
+
 A simple implementation of the popular puzzle game 2048 using Python and Tkinter.
 
 Features

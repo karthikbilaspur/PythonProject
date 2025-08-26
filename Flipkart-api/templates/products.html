@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Products</h1>
+    <form class="filter-form">
+        <label for="category">Category:</label>
+        <select id="category" name="category">
+            <option value="">All</option>
+            <option value="electronics">Electronics</option>
+            <option value="fashion">Fashion</option>
+        </select>
+        <label for="price_min">Price Min:</label>
+        <input type="number" id="price_min" name="price_min">
+        <label for="price_max">Price Max:</label>
+        <input type="number" id="price_max" name="price_max">
+        <button type="submit">Filter</button>
+    </form>
+    <ul id="products" class="product-list">
+        {% for product in products %}
+            <li>{{ product.name }} - {{ product.price }}</li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        const form = document.querySelector(".filter-form");
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const category = document.getElementById("category").value;
+            const priceMin = document.getElementById("price_min").value;
+            const priceMax = document.getElementById("price_max").value;
+            fetch(`/products/filter?category=${category}&price_min=${priceMin}&price_max=${priceMax}`)
+                .then(response => response.json())
+                .then(data => {
+                    const productsList = document.getElementById("products");
+                    productsList.innerHTML = "";
+                    data.forEach(product => {
+                        const productListItem = document.createElement("li");
+                        productListItem.textContent = `${product.name} - ${product.price}`;
+                        productsList.appendChild(productListItem);
+                    });
+                });
+        });
+    </script>
+{% endblock %}

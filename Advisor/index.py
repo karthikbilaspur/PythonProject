@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 class RandomAdvisorApplication:
-    def __init__(self, root):
+    def __init__(self, root: tk.Tk):
         self.root = root
         self.root.title("Random Advisor Application")
         self.advice_text = tk.StringVar()
@@ -37,9 +37,9 @@ class RandomAdvisorApplication:
         footer_label = tk.Label(self.root, text="Powered by Advice Slip API", font=("Arial", 10))
         footer_label.pack(pady=10, side=tk.BOTTOM)
 
-        self.advice_history = []
+        self.advice_history: list[str] = []
 
-    def save_advice_to_history(self, advice):
+    def save_advice_to_history(self, advice: str) -> None:
         self.advice_history.append(advice)
         if len(self.advice_history) > 10:
             self.advice_history.pop(0)
@@ -54,7 +54,7 @@ class RandomAdvisorApplication:
 
 def main():
     root = tk.Tk()
-    app = RandomAdvisorApplication(root)
+    RandomAdvisorApplication(root)
     root.mainloop()
 
 if __name__ == "__main__":

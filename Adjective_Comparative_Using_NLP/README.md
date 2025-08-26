@@ -1,4 +1,3 @@
-
 # Adjective Forms Project
 
 This project generates comparative and superlative forms of adjectives using natural language processing (NLP) and machine learning techniques.
