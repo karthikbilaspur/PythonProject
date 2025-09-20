@@ -1,33 +1,35 @@
+from typing import Any
+
 class Dictionary:
     def __init__(self):
-        self.data = {}
+        self.data: dict[str, Any] = {}
 
-    def add(self, key, value):
+    def add(self, key: str, value: Any):
         self.data[key] = value
 
-    def get(self, key):
+    def get(self, key: str) -> Any:
         return self.data.get(key)
 
-    def update(self, key, value):
+    def update(self, key: str, value: Any) -> None:
         if key in self.data:
             self.data[key] = value
         else:
             print("Key not found")
 
-    def delete(self, key):
+    def delete(self, key: str) -> None:
         if key in self.data:
             del self.data[key]
         else:
             print("Key not found")
 
-    def print_dict(self):
+    def print_dict(self) -> None:
         for key, value in self.data.items():
             print(f"{key}: {value}")
 
-    def sort_by_keys(self):
+    def sort_by_keys(self) -> dict[str, Any]:
         return dict(sorted(self.data.items()))
 
-    def sort_by_values(self):
+    def sort_by_values(self) -> dict[str, Any]:
         return dict(sorted(self.data.items(), key=lambda item: item[1]))
 
 # Create a dictionary

@@ -1,29 +1,29 @@
 class Set:
     def __init__(self):
-        self.data = set()
+        self.data: set[int] = set()
 
-    def add(self, value):
+    def add(self, value: int):
         self.data.add(value)
 
-    def remove(self, value):
+    def remove(self, value: int):
         if value in self.data:
             self.data.remove(value)
         else:
             print("Value not found in set")
 
-    def union(self, other_set):
+    def union(self, other_set: "Set") -> set[int]:
         return self.data.union(other_set.data)
 
-    def intersection(self, other_set):
+    def intersection(self, other_set: "Set") -> set[int]:
         return self.data.intersection(other_set.data)
 
-    def difference(self, other_set):
+    def difference(self, other_set: "Set") -> set[int]:
         return self.data.difference(other_set.data)
 
-    def is_subset(self, other_set):
+    def is_subset(self, other_set: "Set") -> bool:
         return self.data.issubset(other_set.data)
 
-    def is_superset(self, other_set):
+    def is_superset(self, other_set: "Set") -> bool:
         return self.data.issuperset(other_set.data)
 
     def print_set(self):

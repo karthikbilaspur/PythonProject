@@ -1,12 +1,14 @@
+from typing import Dict, List
+
 class Graph:
     def __init__(self):
-        self.data = {}
+        self.data: Dict[str, List[str]] = {}
 
-    def add_node(self, node):
+    def add_node(self, node: str):
         if node not in self.data:
             self.data[node] = []
 
-    def add_edge(self, node1, node2):
+    def add_edge(self, node1: str, node2: str):
         if node1 in self.data and node2 in self.data:
             self.data[node1].append(node2)
             self.data[node2].append(node1)
@@ -15,19 +17,19 @@ class Graph:
         for node in self.data:
             print(node, "->", self.data[node])
 
-    def dfs(self, start_node):
-        visited = set()
+    def dfs(self, start_node: str) -> None:
+        visited: set[str] = set()
         self._dfs_helper(start_node, visited)
 
-    def _dfs_helper(self, node, visited):
+    def _dfs_helper(self, node: str, visited: set[str]) -> None:
         visited.add(node)
         print(node, end=" ")
         for neighbor in self.data[node]:
             if neighbor not in visited:
                 self._dfs_helper(neighbor, visited)
 
-    def bfs(self, start_node):
-        visited = set()
+    def bfs(self, start_node: str) -> None:
+        visited: set[str] = set()
         queue = [start_node]
         visited.add(start_node)
         while queue:

@@ -1,4 +1,4 @@
-def merge_sort(arr):
+def merge_sort(arr: list[int]) -> list[int]:
     if len(arr) <= 1:
         return arr
     mid = len(arr) // 2
@@ -6,8 +6,8 @@ def merge_sort(arr):
     right_half = merge_sort(arr[mid:])
     return merge(left_half, right_half)
 
-def merge(left, right):
-    merged = []
+def merge(left: list[int], right: list[int]) -> list[int]:
+    merged: list[int] = []
     left_index = 0
     right_index = 0
     while left_index < len(left) and right_index < len(right):

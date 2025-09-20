@@ -1,60 +1,64 @@
-import schedule
-import time
-import os
-import shutil
 import requests
-from bs4 import
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+from bs4 import BeautifulSoup
 
-# Define constants
-SOURCE_DIR = '/path/to/source'
-DESTINATION_DIR = '/path/to/destination'
-URL = 'http://example.com'
-FROM_EMAIL = 'your-email@gmail.com'
-TO_EMAIL = 'recipient-email@gmail.com'
-PASSWORD = 'your-password'
+def scrape_ubuntu_news(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Request error: {e}")
+        return
 
-# Function to move files
-def move_files():
-    for filename in os.listdir(SOURCE_DIR):
-        if filename.endswith(".txt"):
-            shutil.move(os.path.join(SOURCE_DIR, filename), DESTINATION_DIR)
-    print("Files moved successfully")
-
-# Function to scrape website
-def scrape_website():
-    response = requests.get(URL)
     soup = BeautifulSoup(response.text, 'html.parser')
-    links = [link.get('href') for link in soup.find_all('a')]
-    return links
+    news_articles = soup.find_all('article')
 
-# Function to send email
-def send_email(subject, body):
-    msg = MIMEMultipart()
-    msg['From'] = FROM_EMAIL
-    msg['To'] = TO_EMAIL
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(FROM_EMAIL, PASSWORD)
-    server.sendmail(FROM_EMAIL, TO_EMAIL, msg.as_string())
-    server.quit()
-    print("Email sent successfully")
+    for article in news_articles:
+        title = article.find('h2')
+        link = article.find('a')
+        if title and link:
+            print(f"Title: {title.text.strip()}")
+            print(f"Link: {link['href']}")
+            print()
 
-# Function to perform daily tasks
-def daily_tasks():
-    move_files()
-    links = scrape_website()
-    body = "Links scraped from {}: {}".format(URL, links)
-    send_email("Daily Update", body)
+def scrape_ubuntu_downloads(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Request error: {e}")
+        return
 
-# Schedule daily tasks
-schedule.every().day.at("08:00").do(daily_tasks)  # Run daily tasks at 8am every day
+    soup = BeautifulSoup(response.text, 'html.parser')
+    download_links = soup.find_all('a', class_='download-link')
 
-# Run scheduled tasks
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+    for link in download_links:
+        print(f"Download Link: {link['href']}")
+
+def get_ubuntu_news_url():
+    return "https://ubuntu.com/blog"
+
+def get_ubuntu_downloads_url():
+    return "https://ubuntu.com/download"
+
+def main():
+    news_url = get_ubuntu_news_url()
+    downloads_url = get_ubuntu_downloads_url()
+
+    while True:
+        print("Ubuntu Scraper Menu:")
+        print("**1. Scrape News**")
+        print("**2. Scrape Downloads**")
+        print("**3. Quit**")
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            scrape_ubuntu_news(news_url)
+        elif choice == "2":
+            scrape_ubuntu_downloads(downloads_url)
+        elif choice == "3":
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()

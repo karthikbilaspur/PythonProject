@@ -1,7 +1,7 @@
 import sys
 import heapq
 
-def dijkstra(graph, start):
+def dijkstra(graph: dict[str, dict[str, int]], start: str) -> dict[str, int]:
     distances = {node: sys.maxsize for node in graph}
     distances[start] = 0
     queue = [(0, start)]

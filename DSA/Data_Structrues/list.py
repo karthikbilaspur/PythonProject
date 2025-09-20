@@ -1,26 +1,28 @@
+from typing import Any
+
 class List:
     def __init__(self):
-        self.data = []
+        self.data: list[Any] = []
 
-    def append(self, value):
+    def append(self, value: Any):
         self.data.append(value)
 
-    def insert(self, index, value):
+    def insert(self, index: int, value: Any):
         self.data.insert(index, value)
 
-    def delete(self, index):
+    def delete(self, index: int):
         if index < len(self.data):
             del self.data[index]
         else:
             print("Index out of range")
 
-    def get(self, index):
+    def get(self, index: int):
         if index < len(self.data):
             return self.data[index]
         else:
             print("Index out of range")
 
-    def update(self, index, value):
+    def update(self, index: int, value: Any):
         if index < len(self.data):
             self.data[index] = value
         else:

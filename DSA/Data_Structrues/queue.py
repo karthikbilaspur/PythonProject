@@ -1,8 +1,10 @@
+from typing import List
+
 class Queue:
     def __init__(self):
-        self.data = []
+        self.data: List[int] = []
 
-    def enqueue(self, value):
+    def enqueue(self, value: int):
         self.data.append(value)
 
     def dequeue(self):

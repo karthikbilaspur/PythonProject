@@ -1,103 +1,113 @@
-
 import pygame
 import sys
 import random
+import json
 
-# Initialize Pygame
-pygame.init()
-
-# Set up some constants
+# Constants
 WIDTH, HEIGHT = 800, 600
 DOT_RADIUS = 10
 LINE_WIDTH = 2
 
-# Set up some colors
+# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 
-# Set up the display
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+class Dot:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
-# Set up the dots
-dots = [
-    (100, 100),
-    (300, 100),
-    (500, 100),
-    (100, 300),
-    (300, 300),
-    (500, 300),
-    (100, 500),
-    (300, 500),
-    (500, 500),
-]
+    def distance_to(self, x, y):
+        return ((self.x - x) ** 2 + (self.y - y) ** 2) ** 0.5
 
-# Set up the lines
-lines = []
+    def to_dict(self):
+        return {"x": self.x, "y": self.y}
 
-# Set up the start and end dots
-start_dot = None
-end_dot = None
+    @classmethod
+    def from_dict(cls, data):
+        return cls(data["x"], data["y"])
 
-# Game loop
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            for dot in dots:
-                if ((dot[0] - event.pos[0]) ** 2 + (dot[1] - event.pos[1]) ** 2) ** 0.5 < DOT_RADIUS:
-                    start_dot = dot
-                    break
-            else:
-                start_dot = None
-        elif event.type == pygame.MOUSEBUTTONUP:
-            for dot in dots:
-                if ((dot[0] - event.pos[0]) ** 2 + (dot[1] - event.pos[1]) ** 2) ** 0.5 < DOT_RADIUS and start_dot:
-                    end_dot = dot
-                    lines.append((start_dot, end_dot))
-                    start_dot = None
-                    end_dot = None
-                    break
-            else:
-                start_dot = None
-                end_dot = None
-
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
-                lines = []
-            elif event.key == pygame.K_s:
-                # Save the current state of the game
-                with open("save.txt", "w") as f:
-                    for line in lines:
-                        f.write(f"{line[0][0]} {line[0][1]} {line[1][0]} {line[1][1]}\n")
-            elif event.key == pygame.K_l:
-                # Load a saved state of the game
-                try:
-                    with open("save.txt", "r") as f:
-                        lines = []
-                        for line in f.readlines():
-                            x1, y1, x2, y2 = map(int, line.split())
-                            lines.append(((x1, y1), (x2, y2)))
-                except FileNotFoundError:
-                    print("No save file found")
-
-    # Draw everything
-    screen.fill(WHITE)
-    for dot in dots:
-        pygame.draw.circle(screen, BLACK, dot, DOT_RADIUS)
+def save_lines(lines, filename):
+    data = []
     for line in lines:
-        pygame.draw.line(screen, BLACK, line[0], line[1], LINE_WIDTH)
-    if start_dot:
-        pygame.draw.line(screen, RED, start_dot, pygame.mouse.get_pos(), LINE_WIDTH)
+        data.append({"start": line[0].to_dict(), "end": line[1].to_dict()})
+    with open(filename, "w") as f:
+        json.dump(data, f)
 
-    # Draw the start and end dots
-    if start_dot:
-        pygame.draw.circle(screen, GREEN, start_dot, DOT_RADIUS)
-    if end_dot:
-        pygame.draw.circle(screen, GREEN, end_dot, DOT_RADIUS)
+def load_lines(filename):
+    try:
+        with open(filename, "r") as f:
+            data = json.load(f)
+            lines = []
+            for line_data in data:
+                start_dot = Dot.from_dict(line_data["start"])
+                end_dot = Dot.from_dict(line_data["end"])
+                lines.append((start_dot, end_dot))
+            return lines
+    except FileNotFoundError:
+        print("No save file found")
+        return []
 
-    # Update the display
-    pygame.display.flip()
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    clock = pygame.time.Clock()
+
+    dots = [
+        Dot(100, 100),
+        Dot(300, 100),
+        Dot(500, 100),
+        Dot(100, 300),
+        Dot(300, 300),
+        Dot(500, 300),
+        Dot(100, 500),
+        Dot(300, 500),
+        Dot(500, 500),
+    ]
+
+    lines = []
+    start_dot = None
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                for dot in dots:
+                    if dot.distance_to(*event.pos) < DOT_RADIUS:
+                        start_dot = dot
+                        break
+                else:
+                    start_dot = None
+            elif event.type == pygame.MOUSEBUTTONUP:
+                if start_dot:
+                    for dot in dots:
+                        if dot.distance_to(*event.pos) < DOT_RADIUS and dot != start_dot:
+                            lines.append((start_dot, dot))
+                            break
+                    start_dot = None
+
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    lines = []
+                elif event.key == pygame.K_s:
+                    save_lines(lines, "save.json")
+                elif event.key == pygame.K_l:
+                    lines = load_lines("save.json")
+
+        screen.fill(WHITE)
+        for dot in dots:
+            pygame.draw.circle(screen, BLACK, (dot.x, dot.y), DOT_RADIUS)
+        for line in lines:
+            pygame.draw.line(screen, BLACK, (line[0].x, line[0].y), (line[1].x, line[1].y), LINE_WIDTH)
+        if start_dot:
+            pygame.draw.line(screen, RED, (start_dot.x, start_dot.y), pygame.mouse.get_pos(), LINE_WIDTH)
+
+        pygame.display.flip()
+        clock.tick(60)
+
+if __name__ == "__main__":
+    main()

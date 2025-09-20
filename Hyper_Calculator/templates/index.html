@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>{{ _('Calculator') }}</h1>
+    <form id="calculator-form">
+        <input type="text" id="expression" name="expression">
+        <button type="submit">{{ _('Calculate') }}</button>
+        <p id="result"></p>
+    </form>
+    <button id="save-to-history">{{ _('Save to history') }}</button>
+    <button id="show-history">{{ _('Show history') }}</button>
+    <div id="history"></div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -8,7 +8,7 @@ class BinaryTree:
     def __init__(self):
         self.root = None
 
-    def insert(self, value):
+    def insert(self, value: int):
         if not self.root:
             self.root = Node(value)
         else:

@@ -8,7 +8,7 @@ from fake_useragent import UserAgent
 import random
 
 # Set up logging
-logging.basicConfig(filename='scraper.log', level=logging.INFO)
+logging.basicConfig(filename='scraper.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def scrape_website(url):
     try:
@@ -24,7 +24,7 @@ def scrape_website(url):
         }
         
         # Send a GET request with the headers
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=10)
         
         # If the GET request is successful, the status code will be 200
         if response.status_code == 200:
@@ -35,28 +35,24 @@ def scrape_website(url):
             soup = BeautifulSoup(page_content, 'html.parser')
             
             # Find the elements you want to scrape
-            titles = soup.find_all('h2')
+            titles = soup.find_all(['h1', 'h2', 'h3'])
             links = soup.find_all('a')
+            images = soup.find_all('img')
             
             # Create lists to store the scraped data
-            title_list = []
-            link_list = []
+            title_list = [title.text.strip() for title in titles]
+            link_list = [link.get('href') for link in links if link.get('href')]
+            image_list = [image.get('src') for image in images if image.get('src')]
             
-            # Loop through the elements and extract the data
-            for title in titles:
-                title_list.append(title.text.strip())
-                
-            for link in links:
-                link_list.append(link.get('href'))
-                
-            # Create a DataFrame to store the scraped data
-            df = pd.DataFrame({
-                'Title': title_list,
-                'Link': link_list
-            })
+            # Create DataFrames to store the scraped data
+            df_titles = pd.DataFrame(title_list, columns=['Titles'])
+            df_links = pd.DataFrame(link_list, columns=['Links'])
+            df_images = pd.DataFrame(image_list, columns=['Images'])
             
-            # Save the DataFrame to a CSV file
-            df.to_csv('scraped_data.csv', index=False)
+            # Save the DataFrames to CSV files
+            df_titles.to_csv('scraped_titles.csv', index=False)
+            df_links.to_csv('scraped_links.csv', index=False)
+            df_images.to_csv('scraped_images.csv', index=False)
             
             logging.info("Data scraped successfully!")
             print("Data scraped successfully!")

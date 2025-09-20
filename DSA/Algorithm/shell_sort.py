@@ -1,4 +1,6 @@
-def shell_sort(arr):
+from typing import List
+
+def shell_sort(arr: List[int]) -> List[int]:
     gap = len(arr) // 2
     while gap > 0:
         for i in range(gap, len(arr)):

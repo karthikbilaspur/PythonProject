@@ -1,13 +1,15 @@
+from typing import Optional
+
 class Node:
-    def __init__(self, data):
+    def __init__(self, data: int):
         self.data = data
-        self.next = None
+        self.next: Optional['Node'] = None
 
 class LinkedList:
     def __init__(self):
         self.head = None
 
-    def append(self, data):
+    def append(self, data: int):
         new_node = Node(data)
         if not self.head:
             self.head = new_node
