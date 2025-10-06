@@ -1,31 +1,53 @@
 import cv2
 import numpy as np
 
-# Load the image
-image = cv2.imread('image.jpg')
+def load_image(image_path):
+    """Loads an image from the specified path."""
+    return cv2.imread(image_path)
 
-# Convert the image to YCrCb color space
-ycrcb_image = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
+def adjust_contrast(image, alpha, beta):
+    """
+    Adjusts the contrast of the image.
 
-# Split the YCrCb image into its components
-y, cr, cb = cv2.split(ycrcb_image)
+    Args:
+        image: The input image.
+        alpha: Contrast control (1.0-3.0).
+        beta: Brightness control (0-100).
 
-# Apply contrast adjustment to the Y component
-alpha = 1.5  # Contrast control (1.0-3.0)
-beta = 0  # Brightness control (0-100)
-y_contrasted = cv2.convertScaleAbs(y, alpha=alpha, beta=beta)
+    Returns:
+        The contrast-adjusted image.
+    """
+    ycrcb_image = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
+    y, cr, cb = cv2.split(ycrcb_image)
+    y_contrasted = cv2.convertScaleAbs(y, alpha=alpha, beta=beta)
+    contrasted_ycrcb_image = cv2.merge([y_contrasted, cr, cb])
+    return cv2.cvtColor(contrasted_ycrcb_image, cv2.COLOR_YCrCb2BGR)
 
-# Merge the contrast-adjusted Y component with the Cr and Cb components
-contrasted_ycrcb_image = cv2.merge([y_contrasted, cr, cb])
+def display_images(original_image, contrasted_image):
+    """Displays the original and contrast-adjusted images."""
+    cv2.imshow('Original Image', original_image)
+    cv2.imshow('Contrasted Image', contrasted_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
-# Convert the contrast-adjusted YCrCb image back to BGR color space
-contrasted_image = cv2.cvtColor(contrasted_ycrcb_image, cv2.COLOR_YCrCb2BGR)
+def save_image(image, output_path):
+    """Saves the image to the specified path."""
+    cv2.imwrite(output_path, image)
 
-# Display the original and contrast-adjusted images
-cv2.imshow('Original Image', image)
-cv2.imshow('Contrasted Image', contrasted_image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+def main():
+    image_path = 'image.jpg'
+    output_path = 'contrasted_image.jpg'
+    alpha = 1.5  # Contrast control (1.0-3.0)
+    beta = 0  # Brightness control (0-100)
 
-# Save the contrast-adjusted image
-cv2.imwrite('contrasted_image.jpg', contrasted_image)
+    original_image = load_image(image_path)
+    if original_image is None:
+        print("Error: Could not load image.")
+        return
+
+    contrasted_image = adjust_contrast(original_image, alpha, beta)
+    display_images(original_image, contrasted_image)
+    save_image(contrasted_image, output_path)
+
+if __name__ == "__main__":
+    main()

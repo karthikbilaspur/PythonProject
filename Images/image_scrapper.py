@@ -1,30 +1,45 @@
-from bs4 import BeautifulSoup
+
 import requests
-import sys
+from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
+import sys
 
-def scrape_images(url):
-    try:
-        response = requests.get(
-            url,
-            headers={
-                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
-            }
-        )
-        response.raise_for_status()  # Raise an exception for 4xx/5xx status codes
-    except requests.RequestException as e:
-        sys.exit(f"Request failed: {e}")
+class ImageScraper:
+    def __init__(self, url):
+        self.url = url
+        self.images = []
 
-    html_data = BeautifulSoup(response.text, 'html.parser')
-    images = html_data.find_all('img', src=True)
+    def scrape_images(self):
+        try:
+            response = requests.get(self.url, headers=self.get_headers())
+            response.raise_for_status()
+        except requests.RequestException as e:
+            sys.exit(f"Request failed: {e}")
 
-    for image in images:
-        img_src = image['src']
-        if not bool(urlparse(img_src).netloc):
-            img_src = urljoin(url, img_src)
-        print(img_src)
+        html_data = BeautifulSoup(response.text, 'html.parser')
+        images = html_data.find_all('img', src=True)
 
-if __name__ == "__main__":
+        for image in images:
+            img_src = image['src']
+            if not bool(urlparse(img_src).netloc):
+                img_src = urljoin(self.url, img_src)
+            self.images.append(img_src)
+
+    def get_headers(self):
+        return {
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
+        }
+
+    def print_images(self):
+        for image in self.images:
+            print(image)
+
+def main():
     if len(sys.argv) != 2:
         sys.exit("Usage: python scrape_images.py {url}")
-    scrape_images(sys.argv[1])
+    scraper = ImageScraper(sys.argv[1])
+    scraper.scrape_images()
+    scraper.print_images()
+
+if __name__ == "__main__":
+    main()

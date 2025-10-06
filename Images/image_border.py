@@ -1,32 +1,48 @@
 import cv2
 import tkinter as tk
-from tkinter.filedialog import *
+from tkinter import filedialog
 
 class ImageBorderApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Borders on images")
-        self.root.geometry('320x220')
+        self.root.title("Image Border App")
+        self.root.geometry('350x300')
         self.img = None
+        self.border_size = 50
 
-        label = tk.Label(root, text="Select an image and then choose an option")
-        label.grid(row=0, column=0, columnspan=2)
+        # Create GUI components
+        self.create_widgets()
 
-        tk.Button(root, text="Choose image", command=self.choose_image).grid(row=1, column=0, columnspan=2)
+    def create_widgets(self):
+        label = tk.Label(self.root, text="Select an image and choose a border option")
+        label.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+        tk.Button(self.root, text="Choose image", command=self.choose_image).grid(row=1, column=0, columnspan=2)
 
         self.border_type = tk.StringVar()
         self.border_type.set("constant")
 
-        tk.Radiobutton(root, text='Constant border', variable=self.border_type, value="constant").grid(row=2, column=0)
-        tk.Radiobutton(root, text='Reflection border', variable=self.border_type, value="reflection").grid(row=3, column=0)
-        tk.Radiobutton(root, text='Default border', variable=self.border_type, value="default").grid(row=4, column=0)
-        tk.Radiobutton(root, text='Replicate border', variable=self.border_type, value="replicate").grid(row=5, column=0)
-        tk.Radiobutton(root, text='Wrap border', variable=self.border_type, value="wrap").grid(row=6, column=0)
+        border_types = [
+            ("Constant border", "constant"),
+            ("Reflection border", "reflection"),
+            ("Default border", "default"),
+            ("Replicate border", "replicate"),
+            ("Wrap border", "wrap")
+        ]
 
-        tk.Button(root, text="Apply border", command=self.apply_border).grid(row=7, column=0, columnspan=2)
+        for i, (text, value) in enumerate(border_types):
+            tk.Radiobutton(self.root, text=text, variable=self.border_type, value=value).grid(row=i+2, column=0)
+
+        tk.Button(self.root, text="Apply border", command=self.apply_border).grid(row=7, column=0, columnspan=2)
+
+        # Add border size entry
+        tk.Label(self.root, text="Border size").grid(row=8, column=0)
+        self.border_size_entry = tk.Entry(self.root)
+        self.border_size_entry.insert(0, str(self.border_size))
+        self.border_size_entry.grid(row=8, column=1)
 
     def choose_image(self):
-        photo = askopenfilename(filetypes=[("Image Files", ".jpg .jpeg .png .bmp")])
+        photo = filedialog.askopenfilename(filetypes=[("Image Files", ".jpg .jpeg .png .bmp")])
         if photo:
             self.img = cv2.imread(photo)
             self.img = cv2.resize(self.img, (500, 500))
@@ -35,17 +51,22 @@ class ImageBorderApp:
         if self.img is None:
             return
 
+        try:
+            self.border_size = int(self.border_size_entry.get())
+        except ValueError:
+            print("Invalid border size")
+            return
+
         border_type = self.border_type.get()
-        if border_type == "constant":
-            bordered = cv2.copyMakeBorder(self.img, 50, 50, 50, 50, cv2.BORDER_CONSTANT)
-        elif border_type == "reflection":
-            bordered = cv2.copyMakeBorder(self.img, 50, 50, 50, 50, cv2.BORDER_REFLECT)
-        elif border_type == "default":
-            bordered = cv2.copyMakeBorder(self.img, 50, 50, 50, 50, cv2.BORDER_DEFAULT)
-        elif border_type == "replicate":
-            bordered = cv2.copyMakeBorder(self.img, 50, 50, 50, 50, cv2.BORDER_REPLICATE)
-        elif border_type == "wrap":
-            bordered = cv2.copyMakeBorder(self.img, 50, 50, 50, 50, cv2.BORDER_WRAP)
+        border_types = {
+            "constant": cv2.BORDER_CONSTANT,
+            "reflection": cv2.BORDER_REFLECT,
+            "default": cv2.BORDER_DEFAULT,
+            "replicate": cv2.BORDER_REPLICATE,
+            "wrap": cv2.BORDER_WRAP
+        }
+
+        bordered = cv2.copyMakeBorder(self.img, self.border_size, self.border_size, self.border_size, self.border_size, border_types[border_type])
 
         cv2.imshow("Bordered Image", bordered)
         cv2.waitKey(0)
