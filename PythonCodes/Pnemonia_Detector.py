@@ -1,17 +1,9 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-import os
-from PIL import Image
-
-# Load the dataset
-train_dir = 'path/to/train/directory'
-test_dir = 'path/to/test/directory'
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # Define the image dimensions
 img_height, img_width = 224, 224
@@ -20,18 +12,18 @@ img_height, img_width = 224, 224
 batch_size = 32
 
 # Data augmentation
-train_datagen = keras.preprocessing.image.ImageDataGenerator(
+train_datagen = ImageDataGenerator(
     rescale=1./255,
     shear_range=0.2,
     zoom_range=0.2,
     horizontal_flip=True
 )
 
-test_datagen = keras.preprocessing.image.ImageDataGenerator(rescale=1./255)
+test_datagen = ImageDataGenerator(rescale=1./255)
 
 # Load the training data
 train_generator = train_datagen.flow_from_directory(
-    train_dir,
+    'path/to/train/directory',
     target_size=(img_height, img_width),
     batch_size=batch_size,
     class_mode='binary'
@@ -39,7 +31,7 @@ train_generator = train_datagen.flow_from_directory(
 
 # Load the testing data
 test_generator = test_datagen.flow_from_directory(
-    test_dir,
+    'path/to/test/directory',
     target_size=(img_height, img_width),
     batch_size=batch_size,
     class_mode='binary'
@@ -74,6 +66,7 @@ test_loss, test_acc = model.evaluate(test_generator)
 print(f'Test accuracy: {test_acc:.2f}')
 
 # Plot the training and validation accuracy
+import matplotlib.pyplot as plt
 plt.plot(history.history['accuracy'], label='Training Accuracy')
 plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
 plt.legend()
@@ -89,5 +82,6 @@ predicted_labels = np.round(predictions).flatten()
 true_labels = test_generator.classes
 
 # Print the classification report and confusion matrix
+from sklearn.metrics import classification_report, confusion_matrix
 print(classification_report(true_labels, predicted_labels))
 print(confusion_matrix(true_labels, predicted_labels))

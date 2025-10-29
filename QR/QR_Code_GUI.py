@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 
-def generate_qr_code(data, filename='qr_code.png', scale=10):
+def generate_qr_code(data: str, filename: str = 'qr_code.png', scale: int = 10) -> str:
     try:
         qr = qrcode.QRCode(
             version=None,

@@ -1,9 +1,9 @@
 
-def is_palindrome(s):
+def is_palindrome(s: str) -> bool:
     s = ''.join(c for c in s if c.isalnum()).lower()
     return s == s[::-1]
 
-def palindrome_type(s):
+def palindrome_type(s: str) -> str:
     if is_palindrome(s):
         if len(s) % 2 == 0:
             return "Even-length palindrome"
@@ -12,7 +12,7 @@ def palindrome_type(s):
     else:
         return "Not a palindrome"
 
-def longest_palindromic_substring(s):
+def longest_palindromic_substring(s: str) -> str:
     s = ''.join(c for c in s if c.isalnum()).lower()
     longest = ""
     for i in range(len(s)):

@@ -1,15 +1,14 @@
-
 import random
 import operator
 
-def is_valid(board, row, col, num):
+def is_valid(board: list[list[int]], row: int, col: int, num: int) -> bool:
     # Check if 'num' can be placed in the given position without violating the rules
     for i in range(len(board)):
         if board[row][i] == num or board[i][col] == num:
             return False
     return True
 
-def solve_kenken(board):
+def solve_kenken(board: list[list[int]]) -> bool:
     # Function to solve the KenKen puzzle using backtracking
     for i in range(len(board)):
         for j in range(len(board)):
@@ -23,7 +22,7 @@ def solve_kenken(board):
                 return False
     return True
 
-def generate_kenken_puzzle(size, difficulty):
+def generate_kenken_puzzle(size: int, difficulty: float) -> list[list[int]]:
     # Function to generate a KenKen puzzle
     board = [[0 for _ in range(size)] for _ in range(size)]
     solve_kenken(board)
@@ -36,7 +35,7 @@ def generate_kenken_puzzle(size, difficulty):
 
     return board
 
-def generate_cage_constraints(size, num_cages):
+def generate_cage_constraints(size: int, num_cages: int) -> list[dict]:
     # Function to generate cage constraints
     operations = {
         '+': operator.add,
@@ -65,13 +64,13 @@ def generate_cage_constraints(size, num_cages):
 
     return cages
 
-def print_board(board):
+def print_board(board: list[list[int]]):
     # Function to pretty print the KenKen board
     for row in board:
         print(" ".join(str(num) if num != 0 else "-" for num in row))
     print()
 
-def print_cage_constraints(cages):
+def print_cage_constraints(cages: list[dict]):
     # Function to print cage constraints
     for i, cage in enumerate(cages):
         print(f"Cage {i + 1}:")

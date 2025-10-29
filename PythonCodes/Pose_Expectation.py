@@ -1,71 +1,93 @@
 import cv2
-import mediapipe as mp
 import numpy as np
-import time
 
-mpDraw = mp.solutions.drawing_utils
-mpPose = mp.solutions.pose
-pose = mpPose.Pose(static_image_mode=False, model_complexity=2)
+# Initialize the camera
+cap = cv2.VideoCapture(0)
 
-def calculate_angle(a, b, c):
-    a = np.array(a)
-    b = np.array(b)
-    c = np.array(c)
-    
-    ba = a - b
-    bc = c - b
-    
-    cosine_angle = np.dot(ba, bc) / (np.linalg.norm(ba) * np.linalg.norm(bc))
-    angle = np.arccos(cosine_angle)
-    
-    return np.degrees(angle)
+# Define the snake's initial position and direction
+snake_pos = [(200, 200), (220, 200), (240, 200)]
+direction = 'right'
 
-def track_joint_movement(results):
-    left_shoulder = [results.pose_landmarks.landmark[11].x, results.pose_landmarks.landmark[11].y]
-    right_shoulder = [results.pose_landmarks.landmark[12].x, results.pose_landmarks.landmark[12].y]
-    left_elbow = [results.pose_landmarks.landmark[13].x, results.pose_landmarks.landmark[13].y]
-    right_elbow = [results.pose_landmarks.landmark[14].x, results.pose_landmarks.landmark[14].y]
-    left_wrist = [results.pose_landmarks.landmark[15].x, results.pose_landmarks.landmark[15].y]
-    right_wrist = [results.pose_landmarks.landmark[16].x, results.pose_landmarks.landmark[16].y]
-    
-    left_angle = calculate_angle(left_shoulder, left_elbow, left_wrist)
-    right_angle = calculate_angle(right_shoulder, right_elbow, right_wrist)
-    
-    return left_angle, right_angle
+# Define the food's position
+food_pos = (400, 300)
 
-def main():
-    cap = cv2.VideoCapture(0)
-    pTime = 0
-    
-    while True:
-        success, img = cap.read()
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        results = pose.process(imgRGB)
-        
-        if results.pose_landmarks:
-            mpDraw.draw_landmarks(img, results.pose_landmarks, mpPose.POSE_CONNECTIONS)
-            left_angle, right_angle = track_joint_movement(results)
-            cv2.putText(img, f"Left Angle: {int(left_angle)}", (10, 20), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 1)
-            cv2.putText(img, f"Right Angle: {int(right_angle)}", (10, 40), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 1)
-            
-            for id, lm in enumerate(results.pose_landmarks.landmark):
-                h, w, c = img.shape
-                cx, cy = int(lm.x*w), int(lm.y*h)
-                cv2.circle(img, (cx, cy), 5, (255, 255, 0), cv2.FILLED)
-                cv2.putText(img, str(id), (cx, cy), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 1)
-        
-        cTime = time.time()
-        fps = 1/(cTime - pTime)
-        pTime = cTime
-        
-        cv2.putText(img, str(int(fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
-        
-        cv2.imshow("Image", img)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    
-    cap.release()
-    cv2.destroyAllWindows()
+# Define the score
+score = 0
 
-if __name__ == "__main__":
-    main()
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    # Convert the frame to grayscale and apply thresholding
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+    # Find contours in the thresholded image
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Calculate the center of the contours
+    centers = []
+    for contour in contours:
+        M = cv2.moments(contour)
+        if M['m00'] != 0:
+            cx = int(M['m10'] / M['m00'])
+            cy = int(M['m01'] / M['m00'])
+            centers.append((cx, cy))
+
+    # Determine the direction based on the centers
+    if len(centers) > 1:
+        dx = centers[0][0] - centers[1][0]
+        dy = centers[0][1] - centers[1][1]
+
+        if abs(dx) > abs(dy):
+            if dx > 0:
+                direction = 'left'
+            else:
+                direction = 'right'
+        else:
+            if dy > 0:
+                direction = 'up'
+            else:
+                direction = 'down'
+
+    # Update the snake's position
+    head = snake_pos[-1]
+    if direction == 'up':
+        new_head = (head[0], head[1] - 20)
+    elif direction == 'down':
+        new_head = (head[0], head[1] + 20)
+    elif direction == 'left':
+        new_head = (head[0] - 20, head[1])
+    elif direction == 'right':
+        new_head = (head[0] + 20, head[1])
+
+    snake_pos.append(new_head)
+
+    # Check for collision with food
+    if snake_pos[-1] == food_pos:
+        score += 1
+        food_pos = (np.random.randint(0, 800) // 20 * 20, np.random.randint(0, 600) // 20 * 20)
+    else:
+        snake_pos.pop(0)
+
+    # Check for collision with edge or self
+    if (snake_pos[-1][0] < 0 or snake_pos[-1][0] >= 800 or
+        snake_pos[-1][1] < 0 or snake_pos[-1][1] >= 600 or
+        snake_pos[-1] in snake_pos[:-1]):
+        print(f"Game Over! Your score is {score}.")
+        break
+
+    # Draw the snake and food
+    frame = np.zeros((600, 800, 3), np.uint8)
+    for pos in snake_pos:
+        cv2.rectangle(frame, (pos[0], pos[1]), (pos[0] + 20, pos[1] + 20), (0, 255, 0), -1)
+    cv2.rectangle(frame, (food_pos[0], food_pos[1]), (food_pos[0] + 20, food_pos[1] + 20), (0, 0, 255), -1)
+
+    cv2.imshow('Snake Game', frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()

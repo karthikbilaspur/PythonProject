@@ -9,40 +9,48 @@ class PasswordManager:
         self.master_password = None
 
     def create_master_password(self):
-        password = getpass.getpass("Create a master password: ")
-        confirm_password = getpass.getpass("Confirm master password: ")
-        if password == confirm_password:
-            hashed_password = hashlib.sha256(password.encode()).hexdigest()
-            with open("master_password.txt", "w") as f:
-                f.write(hashed_password)
-            self.master_password = password
-            print("Master password created successfully!")
-        else:
-            print("Passwords do not match. Please try again.")
+        while True:
+            password = getpass.getpass("Create a master password: ")
+            confirm_password = getpass.getpass("Confirm master password: ")
+            if password == confirm_password:
+                hashed_password = hashlib.sha256(password.encode()).hexdigest()
+                with open("master_password.txt", "w") as f:
+                    f.write(hashed_password)
+                self.master_password = password
+                print("Master password created successfully!")
+                break
+            else:
+                print("Passwords do not match. Please try again.")
 
     def login(self):
-        password = getpass.getpass("Enter master password: ")
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        try:
-            with open("master_password.txt", "r") as f:
-                stored_hash = f.read()
-            if hashed_password == stored_hash:
-                self.master_password = password
-                print("Login successful!")
-                return True
-            else:
-                print("Incorrect password. Please try again.")
+        while True:
+            password = getpass.getpass("Enter master password: ")
+            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            try:
+                with open("master_password.txt", "r") as f:
+                    stored_hash = f.read()
+                if hashed_password == stored_hash:
+                    self.master_password = password
+                    print("Login successful!")
+                    return True
+                else:
+                    print("Incorrect password. Please try again.")
+            except FileNotFoundError:
+                print("No master password found. Please create one.")
                 return False
-        except FileNotFoundError:
-            print("No master password found. Please create one.")
-            return False
 
     def add_password(self):
         service = input("Enter service name: ")
-        password = getpass.getpass("Enter password: ")
-        self.passwords[service] = password
-        self.save_passwords()
-        print("Password added successfully!")
+        if service:
+            password = getpass.getpass("Enter password: ")
+            if password:
+                self.passwords[service] = password
+                self.save_passwords()
+                print("Password added successfully!")
+            else:
+                print("Password cannot be empty.")
+        else:
+            print("Service name cannot be empty.")
 
     def view_passwords(self):
         for service, password in self.passwords.items():
@@ -58,8 +66,11 @@ class PasswordManager:
             print("Service not found.")
 
     def save_passwords(self):
-        with open("passwords.json", "w") as f:
-            json.dump(self.passwords, f)
+        try:
+            with open("passwords.json", "w") as f:
+                json.dump(self.passwords, f)
+        except Exception as e:
+            print(f"Error saving passwords: {e}")
 
     def load_passwords(self):
         try:
@@ -67,6 +78,8 @@ class PasswordManager:
                 self.passwords = json.load(f)
         except FileNotFoundError:
             pass
+        except json.JSONDecodeError:
+            print("Error loading passwords. Passwords file is corrupted.")
 
 def main():
     manager = PasswordManager()

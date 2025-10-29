@@ -56,7 +56,7 @@ class PlagiarismDetector:
         self.file2_path = filedialog.askopenfilename()
         self.file2_label['text'] = self.file2_path
 
-    def read_file(self, file_path):
+    def read_file(self, file_path: str) -> str:
         if file_path.endswith('.txt'):
             with open(file_path, 'r') as file:
                 return file.read()
@@ -70,7 +70,7 @@ class PlagiarismDetector:
             messagebox.showerror("Error", "Unsupported file format")
             return None
 
-    def preprocess_text(self, text):
+    def preprocess_text(self, text: str) -> str:
         stop_words = set(stopwords.words('english'))
         stemmer = PorterStemmer()
 

@@ -112,7 +112,7 @@ class PlagiarismChecker:
         except:
             return None
 
-    def calculate_similarity(self, text1, text2):
+    def calculate_similarity(self, text1: str, text2: str) -> float:
         tokens1 = word_tokenize(text1.lower())
         tokens2 = word_tokenize(text2.lower())
 

@@ -37,7 +37,8 @@ class Dungeon:
     def create_room(self, room: Room):
         for i in range(room.x, room.x + room.width):
             for j in range(room.y, room.y + room.height):
-                self.grid[j][i] = '.'
+                if 0 <= i < self.width and 0 <= j < self.height:
+                    self.grid[j][i] = '.'
 
     def add_corridors(self):
         for i in range(len(self.rooms) - 1):
@@ -52,19 +53,26 @@ class Dungeon:
         y2 = room2.y + room2.height // 2
         if x1 < x2:
             for x in range(x1, x2 + 1):
-                self.grid[y1][x] = '.'
+                if 0 <= x < self.width and 0 <= y1 < self.height:
+                    self.grid[y1][x] = '.'
             for y in range(min(y1, y2), max(y1, y2) + 1):
-                self.grid[y][x2] = '.'
+                if 0 <= x2 < self.width and 0 <= y < self.height:
+                    self.grid[y][x2] = '.'
         else:
             for x in range(x2, x1 + 1):
-                self.grid[y2][x] = '.'
+                if 0 <= x < self.width and 0 <= y2 < self.height:
+                    self.grid[y2][x] = '.'
             for y in range(min(y1, y2), max(y1, y2) + 1):
-                self.grid[y][x1] = '.'
+                if 0 <= x1 < self.width and 0 <= y < self.height:
+                    self.grid[y][x1] = '.'
 
     def add_doors(self):
         for room in self.rooms:
             if random.random() < 0.2:
-                self.grid[room.y + room.height // 2][room.x + room.width // 2] = '+'
+                x = room.x + room.width // 2
+                y = room.y + room.height // 2
+                if 0 <= x < self.width and 0 <= y < self.height:
+                    self.grid[y][x] = '+'
 
     def add_enemies(self):
         num_enemies = random.randint(5, 10)
@@ -72,7 +80,8 @@ class Dungeon:
             room = random.choice(self.rooms)
             x = random.randint(room.x + 1, room.x + room.width - 2)
             y = random.randint(room.y + 1, room.y + room.height - 2)
-            self.grid[y][x] = 'E'
+            if 0 <= x < self.width and 0 <= y < self.height and self.grid[y][x] == '.':
+                self.grid[y][x] = 'E'
 
     def add_treasures(self):
         num_treasures = random.randint(5, 10)
@@ -80,11 +89,13 @@ class Dungeon:
             room = random.choice(self.rooms)
             x = random.randint(room.x + 1, room.x + room.width - 2)
             y = random.randint(room.y + 1, room.y + room.height - 2)
-            self.grid[y][x] = '$'
+            if 0 <= x < self.width and 0 <= y < self.height and self.grid[y][x] == '.':
+                self.grid[y][x] = '$'
 
     def add_stairs(self):
-        self.grid[self.rooms[0].y + self.rooms[0].height // 2][self.rooms[0].x + self.rooms[0].width // 2] = '<'
-        self.grid[self.rooms[-1].y + self.rooms[-1].height // 2][self.rooms[-1].x + self.rooms[-1].width // 2] = '>'
+        if self.rooms:
+            self.grid[self.rooms[0].y + self.rooms[0].height // 2][self.rooms[0].x + self.rooms[0].width // 2] = '<'
+            self.grid[self.rooms[-1].y + self.rooms[-1].height // 2][self.rooms[-1].x + self.rooms[-1].width // 2] = '>'
 
     def print_dungeon(self):
         for row in self.grid:

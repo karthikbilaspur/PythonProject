@@ -1,12 +1,12 @@
 import string
 import secrets
 
-def generate_password(length=12):
+def generate_password(length: int = 12) -> str:
     characters = string.ascii_letters + string.digits + string.punctuation
     password = ''.join(secrets.choice(characters) for _ in range(length))
     return password
 
-def generate_custom_password(length=12, use_uppercase=True, use_numbers=True, use_special_chars=True):
+def generate_custom_password(length: int = 12, use_uppercase: bool = True, use_numbers: bool = True, use_special_chars: bool = True) -> str:
     characters = string.ascii_lowercase
     if use_uppercase:
         characters += string.ascii_uppercase

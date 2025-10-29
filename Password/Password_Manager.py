@@ -34,8 +34,10 @@ class PasswordManager:
                 stored_hash = f.read()
             if hashed_password == stored_hash:
                 self.master_password = password
-                self.send_passkey()
-                return True
+                if self.send_passkey():
+                    return True
+                else:
+                    return False
             else:
                 print("Incorrect password. Please try again.")
                 return False
@@ -51,17 +53,26 @@ class PasswordManager:
         msg['Subject'] = 'Passkey'
         body = f"Your passkey is: {self.passkey}"
         msg.attach(MIMEText(body, 'plain'))
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(msg['From'], 'your_password')
-        server.sendmail(msg['From'], msg['To'], msg.as_string())
-        server.quit()
-        passkey_input = input("Enter passkey: ")
-        if passkey_input == self.passkey:
-            print("Login successful!")
-        else:
-            print("Incorrect passkey. Please try again.")
-            self.send_passkey()
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(msg['From'], 'your_password')
+            server.sendmail(msg['From'], msg['To'], msg.as_string())
+            server.quit()
+        except Exception as e:
+            print(f"Error sending passkey: {e}")
+            return False
+        attempts = 0
+        while attempts < 3:
+            passkey_input = input("Enter passkey: ")
+            if passkey_input == self.passkey:
+                print("Login successful!")
+                return True
+            else:
+                attempts += 1
+                print(f"Incorrect passkey. {3 - attempts} attempts remaining.")
+        print("Maximum attempts exceeded. Login failed.")
+        return False
 
     def add_password(self):
         service = input("Enter service name: ")

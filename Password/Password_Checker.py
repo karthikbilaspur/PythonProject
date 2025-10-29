@@ -1,37 +1,26 @@
 import re
 
-def check_password_strength(password):
+def check_password_strength(password: str) -> str:
     strength = 0
-    errors = []
 
     # Check password length
-    if len(password) < 8:
-        errors.append("Password should be at least 8 characters long")
-    else:
+    if len(password) >= 8:
         strength += 1
 
     # Check for uppercase letters
-    if not re.search("[A-Z]", password):
-        errors.append("Password should have at least one uppercase letter")
-    else:
+    if re.search("[A-Z]", password):
         strength += 1
 
     # Check for lowercase letters
-    if not re.search("[a-z]", password):
-        errors.append("Password should have at least one lowercase letter")
-    else:
+    if re.search("[a-z]", password):
         strength += 1
 
     # Check for numbers
-    if not re.search("[0-9]", password):
-        errors.append("Password should have at least one number")
-    else:
+    if re.search("[0-9]", password):
         strength += 1
 
     # Check for special characters
-    if not re.search("[!@#$%^&*()_+=-{};:'<>,./?]", password):
-        errors.append("Password should have at least one special character")
-    else:
+    if re.search("[!@#$%^&*()_+=-{};:'<>,./?]", password):
         strength += 1
 
     if strength == 5:

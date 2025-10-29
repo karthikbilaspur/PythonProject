@@ -1,7 +1,7 @@
 from google_play_scraper import app
 import pandas as pd
 
-def scrape_app_data(package_name):
+def scrape_app_data(package_name: str) -> pd.DataFrame:
     try:
         # Scrape app data
         result = app(

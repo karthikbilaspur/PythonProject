@@ -5,7 +5,7 @@ from resizeimage import resizeimage
 import os
 
 class Qr_Genrator():
-    def __init__(self, root):
+    def __init__(self, root: Tk):
         self.root = root
         self.root.title("QR Code Generator")
         self.root.geometry('900x500+200+50')
@@ -14,7 +14,7 @@ class Qr_Genrator():
         title = Label(self.root, text="  QR Code Genrator", font=(
             "time new roman", 40), bg="#F96900", fg="white", anchor="w").place(x=0, y=0, relwidth=1)
 
-        # Variable
+        # Variables
         self.var_emp_code = StringVar()
         self.var_name = StringVar()
         self.var_department = StringVar()
@@ -76,7 +76,7 @@ class Qr_Genrator():
 
     def genrate(self):
         if self.var_emp_code.get() == '' or self.var_name.get() == '' or self.var_department.get() == '' or self.var_designation.get() == '':
-            self.msg = "All filed required !!!"
+            self.msg = "All fields required !!!"
             self.lbl_msg.config(text=self.msg, fg="red")
 
         else:

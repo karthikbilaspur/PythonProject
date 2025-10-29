@@ -1,6 +1,6 @@
 import math
 
-def is_valid(board, row, col, num, group_size, groups):
+def is_valid(board: list[list[int]], row: int, col: int, num: int, group_size: int, groups: list[dict]) -> bool:
     # Check if 'num' can be placed in the given position without violating the rules
     # Check row and column
     for i in range(len(board)):
@@ -24,7 +24,7 @@ def is_valid(board, row, col, num, group_size, groups):
     return True
 
 
-def is_valid_group(numbers, target, operation):
+def is_valid_group(numbers: list[int], target: int, operation: str) -> bool:
     if operation == '+':
         return sum(numbers) <= target
     elif operation == '-':
@@ -38,7 +38,7 @@ def is_valid_group(numbers, target, operation):
         return numbers[0] / numbers[1] <= target
 
 
-def find_empty_cell(board):
+def find_empty_cell(board: list[list[int]]) -> tuple[int, int] | None:
     # Find an empty cell (cell with value 0) on the board and return its coordinates
     for i in range(len(board)):
         for j in range(len(board)):
@@ -47,7 +47,7 @@ def find_empty_cell(board):
     return None
 
 
-def solve_kenken(board, group_size, groups):
+def solve_kenken(board: list[list[int]], group_size: int, groups: list[dict]) -> bool:
     # Function to solve the KenKen puzzle using backtracking
     empty_cell = find_empty_cell(board)
     if not empty_cell:
@@ -68,7 +68,7 @@ def solve_kenken(board, group_size, groups):
     return False
 
 
-def validate_puzzle_input(size, groups):
+def validate_puzzle_input(size: int, groups: list[dict]) -> bool:
     # Function to validate the user-provided KenKen puzzle input
     if size <= 1 or int(size ** 0.5) ** 2 != size:
         print("Invalid board size. The size should be greater than 1 and a perfect square.")
@@ -115,7 +115,7 @@ def get_puzzle_input():
         return None
 
 
-def print_board(board):
+def print_board(board: list[list[int]]):
     # Function to pretty print the KenKen board
     for row in board:
         print(" ".join(str(num) if num != 0 else "-" for num in row))

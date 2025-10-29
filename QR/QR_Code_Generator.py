@@ -10,7 +10,7 @@ my_mail = "ENTER YOUR EMAIL ID"
 password = "SET PASSWORD"
 
 class QRCodeGenerator:
-    def __init__(self, root):
+    def __init__(self, root: Tk):
         self.root = root
         self.root.title("QR Code Generator APP")
         self.create_widgets()

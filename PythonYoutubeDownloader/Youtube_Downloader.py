@@ -1,7 +1,7 @@
 from pytube import YouTube
 import os
 
-def download_video(url):
+def download_video(url: str):
     yt = YouTube(url)
     print(f"Title: {yt.title}")
     print(f"Views: {yt.views}")
@@ -23,7 +23,7 @@ def download_video(url):
     yt.streams[stream_index].download(download_location)
     print(f"Video downloaded successfully to {download_location}!")
 
-def download_audio(url):
+def download_audio(url: str):
     yt = YouTube(url)
     print(f"Title: {yt.title}")
     print(f"Views: {yt.views}")
@@ -37,7 +37,7 @@ def download_audio(url):
     stream.download(download_location)
     print(f"Audio downloaded successfully to {download_location}!")
 
-def get_video_info(url):
+def get_video_info(url: str):
     yt = YouTube(url)
     print(f"Title: {yt.title}")
     print(f"Views: {yt.views}")
