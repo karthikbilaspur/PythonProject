@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, data):
+    def __init__(self, data: int):
         self.data = data
         self.next = None
 
@@ -9,7 +9,7 @@ class DynamicQueue:
         self.rear = None
         self.size = 0
 
-    def enqueue(self, data):
+    def enqueue(self, data: int):
         node = Node(data)
         if self.isEmpty():
             self.front = self.rear = node

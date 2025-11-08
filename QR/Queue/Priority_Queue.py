@@ -1,9 +1,9 @@
 class PriorityQueue:
-    def __init__(self, size):
+    def __init__(self, size: int):
         self.queue = []
         self.MaxSize = size
 
-    def enqueue(self, data):
+    def enqueue(self, data: int):
         if len(self.queue) < self.MaxSize:
             self.queue.append(data)
             self.queue.sort(reverse=True)

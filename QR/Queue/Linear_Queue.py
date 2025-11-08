@@ -1,11 +1,11 @@
 class LinearQueue:
-    def __init__(self, size):
+    def __init__(self, size: int):
         self.queue = [0] * size
         self.front = 0
         self.rear = -1
         self.MaxSize = size
 
-    def enqueue(self, data):
+    def enqueue(self, data: int):
         if self.isFull():
             print("\nQueue is full. Cannot enqueue.")
             return
