@@ -1,0 +1,4 @@
+numpy
+mido
+fastapi
+uvicorn

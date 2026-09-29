@@ -28,7 +28,6 @@ The program uses a rule-based approach:
 1. Make sure you have Python 3 installed.
 2. Download `adjective.py`
 
-
  Usage
 
 Run it from your terminal:
@@ -57,7 +56,7 @@ Enter an adjective: beautiful
 Type `quit`, `exit`, or `q` to stop.
 
  File Structure
-.
+.s
 ├── adjective.py    Main program
 └── README.md       This file
 

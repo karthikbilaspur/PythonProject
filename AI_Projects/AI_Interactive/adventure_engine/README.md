@@ -1,4 +1,5 @@
-Echo Quest - Adventure Node Engine Pro
+# Echo Quest - Adventure Node Engine Pro
+
 Upgraded version of your original Node / Character / Game code.
 Fixed all interview-level bugs and made it recruiter-ready.
 
@@ -17,6 +18,7 @@ GameEngine class - single responsibility
 File: adventure_engine_pro.py (snake_case = pro)
 Constants: SAVE_FILE = "savegame.json" (UPPER_SNAKE)
 No more A_B mixing
+
 New Features
 Option system: Each option has text, next_node, requires_item (e.g., chest needs key)
 Effect engine: add_item, remove_item, damage, heal, flag, trait_X
@@ -38,12 +40,13 @@ ai-based/
 ├── requirements.txt
 └── savegame.json (auto-created)
 How to Run
+
 bash
 pip install -r requirements.txt
 python adventure_engine_pro.py
 Gameplay:
 
-Enter your name: Kai
+Enter your name: Karthik 
 
 --- START ---
 You stand at a crossroads...
@@ -67,21 +70,24 @@ start -> left -> open_door -> take_key (get key) -> unlock_door [SECRET ENDING]
       -> go_back -> loops to start
 If-Else Logic You Asked For
 python
-# In apply_effects
+
+In apply_effects
+
 if key == "add_item": ...
 elif key == "damage": ...
 elif key == "flag": ...
 
-# In menu
+In menu
 if c == "1": continue
 elif c == "2": show_info()
 elif c == "3": save()
 elif c == "5": quit
 else: invalid
+
 Next Pro Steps
 Add color with rich: pip install rich -> from rich import print
 Add more nodes from JSON file instead of hardcoded
 Turn inventory check into a real node with options
 Add combat: if character.traits["bravery"] > 3: win
 License
-MIT - Add to your portfolio as "Node-Based RPG Engine in Python"
+MIT - Add to your portfolio as "Node-Based RPG Engine in Python

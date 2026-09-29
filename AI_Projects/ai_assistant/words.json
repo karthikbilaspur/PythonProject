@@ -1,0 +1,50 @@
+{
+  "animals": [
+    {
+      "word": "ephemeral",
+      "meaning": "lasting for a very short time",
+      "difficulty": "hard",
+      "fails": 0
+    },
+    {
+      "word": "dog",
+      "meaning": "a domesticated carnivorous mammal",
+      "difficulty": "easy",
+      "fails": 0
+    },
+    {
+      "word": "lion",
+      "meaning": "a large carnivorous mammal",
+      "difficulty": "easy",
+      "fails": 0
+    }
+  ],
+  "tech": [
+    {
+      "word": "algorithm",
+      "meaning": "a process or set of rules to be followed in calculations",
+      "difficulty": "medium",
+      "fails": 0
+    },
+    {
+      "word": "neural",
+      "meaning": "relating to a nerve or the nervous system",
+      "difficulty": "hard",
+      "fails": 0
+    }
+  ],
+  "gre": [
+    {
+      "word": "ubiquitous",
+      "meaning": "present everywhere at the same time",
+      "difficulty": "hard",
+      "fails": 0
+    },
+    {
+      "word": "laconic",
+      "meaning": "using very few words",
+      "difficulty": "hard",
+      "fails": 0
+    }
+  ]
+}
