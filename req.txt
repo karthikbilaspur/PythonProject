@@ -1,0 +1,108 @@
+# Auto-generated from deep analysis of karthikbilaspur/PythonProject
+# Repo: https://github.com/karthikbilaspur/PythonProject
+# Contains 300+ mini-projects (games, scrapers, AI, ML, automation, GUI)
+
+# --- Core Web Scraping / Automation ---
+requests
+beautifulsoup4
+lxml
+fake-useragent
+ratelimit
+selenium
+scrapy
+html5lib
+
+# --- Data Science / ML / AI ---
+numpy
+pandas
+scikit-learn
+scipy
+statsmodels
+joblib
+matplotlib
+seaborn
+plotly
+tensorflow
+torch
+torchvision
+transformers
+diffusers
+openai
+huggingface-hub
+accelerate
+nltk
+spacy
+gensim
+textblob
+openai-whisper
+
+# --- Computer Vision / Image ---
+opencv-python
+Pillow
+imageio
+pytesseract
+face-recognition
+mediapipe
+qrcode[pil]
+
+# --- Audio / Music / Voice ---
+librosa
+pydub
+SpeechRecognition
+pyttsx3
+gTTS
+pygame  # also used for games
+pyaudio
+
+# --- Games / GUI ---
+pygame
+customtkinter
+tk
+PyQt5
+kivy
+arcade
+
+# --- Web Frameworks / APIs ---
+flask
+flask-cors
+fastapi
+uvicorn
+streamlit
+gradio
+django
+
+# --- Cloud / Firebase / AWS / GitHub ---
+boto3
+firebase-admin
+PyGithub
+python-dotenv
+requests-oauthlib
+
+# --- Utilities / Files / System ---
+python-docx
+openpyxl
+xlrd
+pypdf2
+pdfminer.six
+python-pptx
+cryptography
+pycryptodome
+psutil
+plyer
+pyautogui
+pyperclip
+schedule
+tqdm
+colorama
+rich
+
+# --- Discord / Social Bots ---
+discord.py
+instaloader
+facebook-sdk
+tweepy
+
+# --- Networking / Security ---
+dnspython
+paramiko
+scapy
