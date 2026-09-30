@@ -5,15 +5,15 @@ This clubs your 3 password files into 1 secure extreme engine.
 ## Why Club Them?
 
 You had:
-- File 1: `random` - **INSECURE**, length truncation bug
-- File 2: Markov - **CRASHES** if state unknown, mixes `numpy` + `secrets`, train double-divides
+
+- File 1: `random` - INSECURE, length truncation bug
+- File 2: Markov - CRASHES if state unknown, mixes `numpy` + `secrets`, train double-divides
 - File 3: Best version but pattern validation wrong
 
-**Verdict:** Club them into 1 - they are versions of same job, not 3 engines like music project.
+Verdict: Club them into 1 - they are versions of same job, not 3 engines like music project.
 
 ## Structure
 
-```
 extreme_password_ai/
 ├── password_engine.py   # EXTREME - clubs all 3, fixed secure
 │   ├── generate_secure()       # From File 1 but uses secrets
@@ -26,11 +26,11 @@ extreme_password_ai/
 ├── app.py               # FastAPI web API
 ├── requirements.txt
 └── README.md
-```
 
 ## Immediate Bugs Fixed
 
-### File 1 Bug:
+ File 1 Bug
+
 ```python
 # BEFORE - insecure + truncates required chars
 import random
@@ -43,7 +43,8 @@ if length < len(required_sets): raise ValueError
 secrets.SystemRandom().shuffle(password)
 ```
 
-### File 2 Bug:
+ File 2 Bug
+
 ```python
 # BEFORE - crashes
 next_state = np.random.choice(...) # no fallback if state missing
@@ -53,7 +54,8 @@ if transitions: weighted_choice with secrets
 else: secrets.choice(all_chars)
 ```
 
-### File 2 Train Bug:
+ File 2 Train Bug
+
 ```python
 # BEFORE - double divides on second train
 self.matrix[state][next] /= total # already divided
@@ -62,7 +64,8 @@ self.matrix[state][next] /= total # already divided
 temp_counts -> then convert to prob
 ```
 
-### File 3 Bug:
+ File 3 Bug
+
 ```python
 # BEFORE - allows 'abc' as pattern
 all(ch in "LUDS" or ch.isalnum() for ch in pattern)
@@ -90,20 +93,10 @@ python main.py
 
 ## Security Notes
 
-- **Never use `random` for passwords** - always `secrets`
-- **Never use `np.random` for passwords** - not cryptographically secure
+- Never use `random` for passwords - always `secrets`
+- Never use `np.random` for passwords - not cryptographically secure
 - Always validate `length >= required_sets`
 - `check_strength` now returns consistent dict with entropy bits + crack time estimation
-
-## Example
-
-```
-Secure: k7$Fp2!qZx9@
-Pattern ULLDDS: Abc12!@
-Memorable: Correct-Horse-Battery-Staple-42!
-Extreme: 7f$K9pL2@QwX8!R1
-Strength: Very Strong (6/6) - 85.2 bits - 1000 years crack time
-```
 
 ## Next Extreme Ideas
 

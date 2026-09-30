@@ -1,32 +1,40 @@
 import heapq
 import random
 from collections import deque
+from typing import Optional, TypeAlias
+
+
+Position: TypeAlias = tuple[int, int]
+Path: TypeAlias = list[Position]
+Maze: TypeAlias = list[list[bool]]
 
 
 class MazeSolver:
-    def __init__(self, maze):
+    def __init__(self, maze: Maze) -> None:
         self.maze = maze
-        self.rows = len(maze)
-        self.cols = len(maze[0])
-        self.start = (0, 0)
-        self.goal = (self.rows - 1, self.cols - 1)
+        self.rows: int = len(maze)
+        self.cols: int = len(maze[0])
+        self.start: Position = (0, 0)
+        self.goal: Position = (self.rows - 1, self.cols - 1)
 
-    def is_valid_move(self, row, col):
+    def is_valid_move(self, row: int, col: int) -> bool:
         return (0 <= row < self.rows) and (0 <= col < self.cols) and not self.maze[row][col]
 
-    def dfs_maze_solver(self):
+    def dfs_maze_solver(self) -> Optional[Path]:
         visited = [[False]*self.cols for _ in range(self.rows)]
-        stack = [(self.start)]
+        stack: list[Position] = [self.start]
         visited[self.start[0]][self.start[1]] = True
-        parent = {self.start: None}
+        parent: dict[Position, Optional[Position]] = {self.start: None}
 
         while stack:
             row, col = stack.pop()
             if (row, col) == self.goal:
-                path = []
+                path: Path = []
                 while (row, col) != self.start:
                     path.append((row, col))
-                    row, col = parent[(row, col)]
+                    parent_position = parent[(row, col)]
+                    assert parent_position is not None
+                    row, col = parent_position
                 path.append(self.start)
                 path.reverse()
                 return path
@@ -40,19 +48,21 @@ class MazeSolver:
 
         return None
 
-    def bfs_maze_solver(self):
+    def bfs_maze_solver(self) -> Optional[Path]:
         visited = [[False]*self.cols for _ in range(self.rows)]
         queue = deque([self.start])
         visited[self.start[0]][self.start[1]] = True
-        parent = {self.start: None}
+        parent: dict[Position, Optional[Position]] = {self.start: None}
 
         while queue:
             row, col = queue.popleft()
             if (row, col) == self.goal:
-                path = []
+                path: Path = []
                 while (row, col) != self.start:
                     path.append((row, col))
-                    row, col = parent[(row, col)]
+                    parent_position = parent[(row, col)]
+                    assert parent_position is not None
+                    row, col = parent_position
                 path.append(self.start)
                 path.reverse()
                 return path
@@ -66,19 +76,19 @@ class MazeSolver:
 
         return None
 
-    def astar_maze_solver(self):
-        open_set = []
-        closed_set = set()
+    def astar_maze_solver(self) -> Optional[Path]:
+        open_set: list[tuple[int, Position]] = []
+        closed_set: set[Position] = set()
         g_score = {self.start: 0}
         f_score = {self.start: self.heuristic(self.start)}
-        parent = {}
+        parent: dict[Position, Position] = {}
         heapq.heappush(open_set, (f_score[self.start], self.start))
 
         while open_set:
             _, current = heapq.heappop(open_set)
 
             if current == self.goal:
-                path = []
+                path: Path = []
                 while current in parent:
                     path.append(current)
                     current = parent[current]
@@ -100,19 +110,19 @@ class MazeSolver:
 
         return None
 
-    def heuristic(self, node):
+    def heuristic(self, node: Position) -> int:
         return abs(node[0] - self.goal[0]) + abs(node[1] - self.goal[1])
 
-    def get_neighbors(self, node):
+    def get_neighbors(self, node: Position) -> list[Position]:
         row, col = node
-        neighbors = []
+        neighbors: list[Position] = []
         for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
             new_row, new_col = row + dr, col + dc
             if self.is_valid_move(new_row, new_col):
                 neighbors.append((new_row, new_col))
         return neighbors
 
-    def print_maze(self, path=None):
+    def print_maze(self, path: Optional[Path] = None) -> None:
         for row in range(self.rows):
             for col in range(self.cols):
                 if path and (row, col) in path:
@@ -124,7 +134,7 @@ class MazeSolver:
             print()
 
 
-def generate_random_maze(rows, cols, obstacle_probability):
+def generate_random_maze(rows: int, cols: int, obstacle_probability: float) -> Maze:
     maze = [[random.random() < obstacle_probability for _ in range(cols)] for _ in range(rows)]
     maze[0][0] = False  # Ensure start point is not blocked
     maze[rows - 1][cols - 1] = False  # Ensure goal point is not blocked

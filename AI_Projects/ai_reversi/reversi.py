@@ -1,8 +1,9 @@
 import numpy as np
+from typing import Any, Optional
 
 class Reversi:
     def __init__(self):
-        self.board = np.zeros((8, 8))
+        self.board: np.ndarray[Any, Any] = np.zeros((8, 8))
         self.board[3, 3] = 1
         self.board[3, 4] = -1
         self.board[4, 3] = -1
@@ -10,13 +11,14 @@ class Reversi:
         self.player_turn = 1
         self.move_count = 0
 
-    def is_valid_move(self, row, col):
+    def is_valid_move(self, row: int, col: int) -> bool:
         if row < 0 or row >= 8 or col < 0 or col >= 8 or self.board[row, col] != 0:
             return False
 
         for direction in [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]:
             capture = False
-            r, c = row + direction[0], col + direction[1]
+            r: int = row + direction[0]
+            c: int = col + direction[1]
             while 0 <= r < 8 and 0 <= c < 8 and self.board[r, c] == -self.player_turn:
                 capture = True
                 r += direction[0]
@@ -26,13 +28,14 @@ class Reversi:
 
         return False
 
-    def make_move(self, row, col):
+    def make_move(self, row: int, col: int) -> None:
         if self.is_valid_move(row, col):
             self.board[row, col] = self.player_turn
             for direction in [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]:
                 capture = False
-                r, c = row + direction[0], col + direction[1]
-                tiles_to_flip = []
+                r: int = row + direction[0]
+                c: int = col + direction[1]
+                tiles_to_flip: list[tuple[int, int]] = []
                 while 0 <= r < 8 and 0 <= c < 8 and self.board[r, c] == -self.player_turn:
                     capture = True
                     tiles_to_flip.append((r, c))
@@ -44,23 +47,24 @@ class Reversi:
             self.player_turn *= -1
             self.move_count += 1
 
-    def evaluate_board(self):
-        return np.sum(self.board)
+    def evaluate_board(self) -> float:
+        return float(np.sum(self.board))
 
-    def get_valid_moves(self):
-        valid_moves = []
+    def get_valid_moves(self) -> list[tuple[int, int]]:
+        valid_moves: list[tuple[int, int]] = []
         for row in range(8):
             for col in range(8):
                 if self.is_valid_move(row, col):
                     valid_moves.append((row, col))
         return valid_moves
 
-    def undo_move(self, row, col):
+    def undo_move(self, row: int, col: int) -> None:
         self.board[row, col] = 0
         for direction in [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]:
             capture = False
-            r, c = row + direction[0], col + direction[1]
-            tiles_to_flip = []
+            r: int = row + direction[0]
+            c: int = col + direction[1]
+            tiles_to_flip: list[tuple[int, int]] = []
             while 0 <= r < 8 and 0 <= c < 8 and self.board[r, c] == self.player_turn:
                 capture = True
                 tiles_to_flip.append((r, c))
@@ -74,11 +78,13 @@ class Reversi:
 
 
 class Minimax:
-    def __init__(self, game):
+    def __init__(self, game: Reversi) -> None:
         self.game = game
         self.max_depth = 5
 
-    def minimax(self, depth, alpha, beta, maximizingPlayer):
+    def minimax(
+        self, depth: int, alpha: float, beta: float, maximizingPlayer: bool
+    ) -> float:
         if depth == 0 or len(self.game.get_valid_moves()) == 0:
             return self.game.evaluate_board()
 
@@ -107,7 +113,7 @@ class Minimax:
                     break
             return min_eval
 
-    def get_best_move(self):
+    def get_best_move(self) -> Optional[tuple[int, int]]:
         best_score = float('-inf')
         best_move = None
         for move in self.game.get_valid_moves():
@@ -121,7 +127,7 @@ class Minimax:
         return best_move
 
 
-def print_board(board):
+def print_board(board: np.ndarray[Any, Any]) -> None:
     print("  A B C D E F G H")
     for i in range(8):
         print(i + 1, end=" ")
@@ -149,8 +155,9 @@ def main():
                 print("Invalid move, try again.")
         else:
             move = minimax.get_best_move()
-            game.make_move(move[0], move[1])
-            print("AI's move: ", move[0] + 1, move[1] + 1)
+            if move is not None:
+                game.make_move(move[0], move[1])
+                print("AI's move: ", move[0] + 1, move[1] + 1)
     print_board(game.board)
     score = game.evaluate_board()
     if score > 0:

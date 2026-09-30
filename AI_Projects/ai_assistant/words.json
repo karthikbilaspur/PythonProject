@@ -17,6 +17,12 @@
       "meaning": "a large carnivorous mammal",
       "difficulty": "easy",
       "fails": 0
+    },
+    {
+      "word": "flamingo",
+      "meaning": "bird which can fly",
+      "difficulty": "easy",
+      "fails": 0
     }
   ],
   "tech": [

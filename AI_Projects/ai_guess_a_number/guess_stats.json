@@ -1,0 +1,16 @@
+[
+  {
+    "mode": "computer_guesses",
+    "difficulty": "hard",
+    "guesses": 3,
+    "won": true,
+    "date": "2026-09-29T17:49:57.485052"
+  },
+  {
+    "mode": "human_guesses",
+    "difficulty": "hard",
+    "guesses": 7,
+    "won": false,
+    "date": "2026-09-29T17:50:30.574404"
+  }
+]

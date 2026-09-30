@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+from typing import Literal
 
 # Initialize Pygame
 pygame.init()
@@ -19,37 +20,37 @@ BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
 class Player:
-    def __init__(self, x, y, color):
+    def __init__(self, x: float, y: float, color: tuple[int, int, int]) -> None:
         self.x = x
         self.y = y
         self.color = color
-        self.trail = []
+        self.trail: list[tuple[float, float]] = []
         self.angle = 0
         self.speed = SPEED
         self.score = 0
         self.power_up = False
 
-    def move(self):
+    def move(self) -> None:
         self.x += math.cos(self.angle) * self.speed
         self.y += math.sin(self.angle) * self.speed
         self.trail.append((self.x, self.y))
 
-    def turn(self, direction):
+    def turn(self, direction: Literal['left', 'right']) -> None:
         if direction == 'left':
             self.angle -= 0.1
         elif direction == 'right':
             self.angle += 0.1
 
 class PowerUp:
-    def __init__(self):
+    def __init__(self) -> None:
         self.x = random.uniform(WIDTH / 2 - TRACK_RADIUS, WIDTH / 2 + TRACK_RADIUS)
         self.y = random.uniform(HEIGHT / 2 - TRACK_RADIUS, HEIGHT / 2 + TRACK_RADIUS)
 
-    def draw(self, screen):
+    def draw(self, screen: pygame.Surface) -> None:
         pygame.draw.circle(screen, GREEN, (int(self.x), int(self.y)), POWER_UP_SIZE)
 
 class Game:
-    def __init__(self):
+    def __init__(self) -> None:
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
         self.player1 = Player(WIDTH / 2 + TRACK_RADIUS, HEIGHT / 2, RED)
@@ -57,7 +58,7 @@ class Game:
         self.power_up = PowerUp()
         self.running = True
 
-    def draw(self):
+    def draw(self) -> None:
         self.screen.fill(WHITE)
         pygame.draw.circle(self.screen, (0, 0, 0), (WIDTH // 2, HEIGHT // 2), TRACK_RADIUS, 1)
         for player in [self.player1, self.player2]:
@@ -69,7 +70,7 @@ class Game:
         text = font.render(f"Score: {self.player1.score} - {self.player2.score}", True, (0, 0, 0))
         self.screen.blit(text, (10, 10))
 
-    def update(self):
+    def update(self) -> None:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             self.player1.turn('left')
@@ -114,20 +115,18 @@ class Game:
             else:
                 player.speed = SPEED
 
-    def reset_game(self):
+    def reset_game(self) -> None:
         self.player1.x = WIDTH / 2 + TRACK_RADIUS
         self.player1.y = HEIGHT / 2
         self.player1.angle = 0
-        self.player1.tandem = False
         self.player2.x = WIDTH / 2 - TRACK_RADIUS
         self.player2.y = HEIGHT / 2
         self.player2.angle = 0
-        self.player2.tandem = False
         self.player1.trail = []
         self.player2.trail = []
         self.power_up = PowerUp()
 
-    def run(self):
+    def run(self) -> None:
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
