@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def scrape_ubuntu_news(url):
+def scrape_ubuntu_news(url:int):
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -17,7 +17,7 @@ def scrape_ubuntu_news(url):
         link = article.find('a')
         if title and link:
             print(f"Title: {title.text.strip()}")
-            print(f"Link: {link['href']}")
+            print(f"Link: {link.get('href')}")
             print()
 
 def scrape_ubuntu_downloads(url):
@@ -32,7 +32,9 @@ def scrape_ubuntu_downloads(url):
     download_links = soup.find_all('a', class_='download-link')
 
     for link in download_links:
-        print(f"Download Link: {link['href']}")
+        href = link.get('href')
+        if href:
+            print(f"Download Link: {href}")
 
 def get_ubuntu_news_url():
     return "https://ubuntu.com/blog"
@@ -46,9 +48,9 @@ def main():
 
     while True:
         print("Ubuntu Scraper Menu:")
-        print("**1. Scrape News**")
-        print("**2. Scrape Downloads**")
-        print("**3. Quit**")
+        print("1. Scrape News")
+        print("2. Scrape Downloads")
+        print("3. Quit")
         choice = input("Enter your choice: ")
 
         if choice == "1":

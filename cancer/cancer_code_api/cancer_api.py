@@ -1,14 +1,13 @@
 import requests
-import json
-import pandas as pd
+from typing import Any, cast
 from flask import Flask, render_template, request, jsonify
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 import logging
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['DEBUG'] = True
-socketio = SocketIO(app, logging=True)
+socketio = SocketIO(app)
 
 # API endpoint for hospital listings
 hospital_api_endpoint = "https://api.data.gov.in/resource/99808f6e-da80-43f8-bafd-87d645a414a8?api-key=YOUR_API_KEY&format=json&offset=0&limit=100"
@@ -19,24 +18,24 @@ cancer_api_endpoint = "https://example.com/cancer-statistics"
 # Initialize logger
 logging.basicConfig(level=logging.INFO)
 
-def fetch_hospitals():
+def fetch_hospitals() -> list[dict[str, Any]]:
     try:
         response = requests.get(hospital_api_endpoint)
         response.raise_for_status()
-        data = json.loads(response.text)
-        hospitals = data["records"]
-        return hospitals
-    except requests.exceptions.RequestException as e:
+        data: Any = response.json()
+        records: Any = data.get("records", []) if isinstance(data, dict) else []
+        return [cast(dict[str, Any], record) for record in records if isinstance(record, dict)]
+    except (requests.exceptions.RequestException, ValueError, TypeError) as e:
         logging.error(f"Error fetching hospitals: {e}")
         return []
 
-def fetch_cancer_stats():
+def fetch_cancer_stats() -> dict[str, Any]:
     try:
         response = requests.get(cancer_api_endpoint)
         response.raise_for_status()
-        data = json.loads(response.text)
-        return data
-    except requests.exceptions.RequestException as e:
+        data: Any = response.json()
+        return cast(dict[str, Any], data) if isinstance(data, dict) else {}
+    except (requests.exceptions.RequestException, ValueError, TypeError) as e:
         logging.error(f"Error fetching cancer statistics: {e}")
         return {}
 
@@ -46,14 +45,14 @@ def index():
 
 @socketio.on('connect')
 def test_connect():
-    emit('update', {'data': 'Connected'})
+    socketio.emit('update', {'data': 'Connected'})
 
 @socketio.on('update')
 def handle_update():
     # Fetch latest cancer statistics and hospital listings
     cancer_stats = fetch_cancer_stats()
     hospitals = fetch_hospitals()
-    emit('update', {'cancer_stats': cancer_stats, 'hospitals': hospitals})
+    socketio.emit('update', {'cancer_stats': cancer_stats, 'hospitals': hospitals})
 
 @app.route('/hospitals', methods=['GET'])
 def get_hospitals():
@@ -67,9 +66,12 @@ def get_cancer_stats():
 
 @app.route('/search', methods=['POST'])
 def search_hospitals():
-    query = request.form.get('query', '')
+    query = request.form.get('query', '').lower()
     hospitals = fetch_hospitals()
-    search_results = [hospital for hospital in hospitals if query.lower() in hospital.get('hospital_name', '').lower()]
+    search_results = [
+        hospital for hospital in hospitals
+        if query in str(hospital.get('hospital_name', '')).lower()
+    ]
     return render_template('search_results.html', search_results=search_results)
 
 @app.route('/api/hospitals', methods=['GET'])
@@ -83,11 +85,11 @@ def get_cancer_stats_api():
     return jsonify(cancer_stats)
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(e: Exception):
     return render_template('404.html'), 404
 
 @app.errorhandler(500)
-def internal_server_error(e):
+def internal_server_error(e: Exception):
     return render_template('500.html'), 500
 
 if __name__ == '__main__':

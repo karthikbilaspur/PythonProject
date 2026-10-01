@@ -23,5 +23,10 @@
         "price": 279.99,
         "link": "https://www.amazon.com/Samsung-Galaxy-Watch-Active2/dp/B07D74RKQT/",
         "product_id": "B07D74RKQT"
+    },
+    "book": {
+        "price": 88.0,
+        "link": "",
+        "product_id": ""
     }
 }

@@ -1,6 +1,13 @@
 import itertools
+from typing import Optional
 
-def find_anagrams(word, min_length=0, max_length=None, dictionary=None):
+
+def find_anagrams(
+    word: str,
+    min_length: int = 0,
+    max_length: Optional[int] = None,
+    dictionary: Optional[str] = None,
+) -> set[str]:
     """Generate all possible anagrams for a word"""
     # Remove spaces and convert to lowercase
     word = word.replace(" ", "").lower()
@@ -23,7 +30,7 @@ def find_anagrams(word, min_length=0, max_length=None, dictionary=None):
     
     return anagrams
 
-def load_dictionary(file_path):
+def load_dictionary(file_path: str) -> set[str]:
     """Load a dictionary file into a set"""
     with open(file_path, 'r') as f:
         return set(word.strip().lower() for word in f)

@@ -1,12 +1,42 @@
-import requests
 import sys
-from github import Github
+from datetime import datetime
+from typing import Iterable, Protocol, TypedDict
 
-def repository_names(user):
-    return [repo for repo in user.get_repos()]
+from github.MainClass import Github
 
-def repository_details(user):
-    repo_details = []
+
+class Repository(Protocol):
+    full_name: str
+    description: str | None
+    created_at: datetime
+    language: str | None
+    forks: int
+    stargazers_count: int
+    watchers_count: int
+    html_url: str
+
+
+class User(Protocol):
+    def get_repos(self) -> Iterable[Repository]: ...
+
+
+class RepositoryDetails(TypedDict):
+    Name: str
+    Description: str
+    "Created on": datetime
+    "Programming language": str
+    Forked: str
+    Stars: int
+    Watchers: int
+    URL: str
+
+
+def repository_names(user: User) -> list[Repository]:
+    return list(user.get_repos())
+
+
+def repository_details(user: User) -> list[RepositoryDetails]:
+    repo_details: list[RepositoryDetails] = []
     for repo in repository_names(user):
         details = {
             "Name": repo.full_name.split("/")[1],
@@ -21,7 +51,7 @@ def repository_details(user):
         repo_details.append(details)
     return repo_details
 
-def print_repository_details(repo_details):
+def print_repository_details(repo_details: list[RepositoryDetails]) -> None:
     for repo in repo_details:
         for title, description in repo.items():
             print(f"{title}: {description}")

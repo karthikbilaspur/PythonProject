@@ -1,7 +1,9 @@
-import tweepy
-import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from textblob import TextBlob
+from typing import Any
+
+import tweepy  # pyright: ignore[reportMissingTypeStubs]
+import nltk  # pyright: ignore[reportMissingTypeStubs]
+from nltk.sentiment.vader import SentimentIntensityAnalyzer  # pyright: ignore[reportMissingTypeStubs]
+from textblob import TextBlob  # pyright: ignore[reportMissingTypeStubs]
 import pandas as pd
 from collections import Counter
 import matplotlib.pyplot as plt
@@ -15,19 +17,19 @@ access_token_secret = 'your-access-token-secret'
 # Authenticate with Twitter API
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth)
+api: Any = tweepy.API(auth)
 
 # Define search query and fetch tweets
-def fetch_tweets(query, count):
+def fetch_tweets(query: str, count: int) -> list[str]:
     try:
         tweets = tweepy.Cursor(api.search_tweets, q=query, lang='en').items(count)
-        return [tweet.text for tweet in tweets]
-    except tweepy.TweepError as e:
+        return [str(tweet.text) for tweet in tweets]
+    except Exception as e:
         print(f"Error fetching tweets: {e}")
         return []
 
 # Sentiment analysis using NLTK's VADER
-def analyze_sentiment_vader(tweets):
+def analyze_sentiment_vader(tweets: list[str]) -> list[str]:
     sia = SentimentIntensityAnalyzer()
     sentiments = []
     for tweet in tweets:
@@ -41,21 +43,22 @@ def analyze_sentiment_vader(tweets):
     return sentiments
 
 # Sentiment analysis using TextBlob
-def analyze_sentiment_textblob(tweets):
-    sentiments = []
+def analyze_sentiment_textblob(tweets: list[str]) -> list[str]:
+    sentiments: list[str] = []
     for tweet in tweets:
-        analysis = TextBlob(tweet)
-        if analysis.sentiment.polarity > 0:
+        analysis: Any = TextBlob(tweet)
+        polarity = float(analysis.sentiment.polarity)
+        if polarity > 0:
             sentiments.append('Positive')
-        elif analysis.sentiment.polarity < 0:
+        elif polarity < 0:
             sentiments.append('Negative')
         else:
             sentiments.append('Neutral')
     return sentiments
 
 # Plot sentiment distribution
-def plot_sentiment_distribution(sentiments):
-    sentiment_counts = Counter(sentiments)
+def plot_sentiment_distribution(sentiments: list[str]) -> None:
+    sentiment_counts: Counter[str] = Counter(sentiments)
     labels = list(sentiment_counts.keys())
     sizes = list(sentiment_counts.values())
     plt.pie(sizes, labels=labels, autopct='%1.1f%%')

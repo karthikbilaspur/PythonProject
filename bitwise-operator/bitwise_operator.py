@@ -1,4 +1,4 @@
-def bitwise_operations(a, b):
+def bitwise_operations(a: int, b: int) -> None:
     print(f"Binary representation of {a}: {bin(a)}")
     print(f"Binary representation of {b}: {bin(b)}")
 
