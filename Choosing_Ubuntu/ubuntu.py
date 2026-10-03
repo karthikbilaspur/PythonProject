@@ -1,7 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
-def scrape_ubuntu_news(url):
+
+def scrape_ubuntu_news(url: str) -> None:
     try:
         response = requests.get(url)
         response.raise_for_status()  # Raise an exception for bad status codes
@@ -20,7 +21,8 @@ def scrape_ubuntu_news(url):
             print(f"Link: {link['href']}")
             print()
 
-def scrape_ubuntu_downloads(url):
+
+def scrape_ubuntu_downloads(url: str) -> None:
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -34,10 +36,12 @@ def scrape_ubuntu_downloads(url):
     for link in download_links:
         print(f"Download Link: {link['href']}")
 
-def get_ubuntu_news_url():
+
+def get_ubuntu_news_url() -> str:
     return "https://ubuntu.com/blog"
 
-def get_ubuntu_downloads_url():
+
+def get_ubuntu_downloads_url() -> str:
     return "https://ubuntu.com/download"
 
 def main():

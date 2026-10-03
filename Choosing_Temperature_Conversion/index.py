@@ -1,11 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from pint import UnitRegistry
-
-ureg = UnitRegistry()
 
 class TemperatureConverter:
-    def __init__(self, root):
+    def __init__(self, root: tk.Tk) -> None:
         self.root = root
         self.root.title("Temperature Converter")
 
@@ -55,50 +52,50 @@ class TemperatureConverter:
         self.kelvin_result_label = tk.Label(self.kelvin_tab, text="")
         self.kelvin_result_label.pack()
 
-    def celsius_to_fahrenheit(self):
+    def celsius_to_fahrenheit(self) -> None:
         try:
             celsius = float(self.celsius_entry.get())
-            fahrenheit = (celsius * ureg.degC).to(ureg.degF).magnitude
+            fahrenheit = celsius * 9 / 5 + 32
             self.celsius_result_label.config(text=f"{celsius}°C is equal to {fahrenheit}°F")
         except ValueError:
             self.celsius_result_label.config(text="Invalid input")
 
-    def celsius_to_kelvin(self):
+    def celsius_to_kelvin(self) -> None:
         try:
             celsius = float(self.celsius_entry.get())
-            kelvin = (celsius * ureg.degC).to(ureg.kelvin).magnitude
+            kelvin = celsius + 273.15
             self.celsius_result_label.config(text=f"{celsius}°C is equal to {kelvin}K")
         except ValueError:
             self.celsius_result_label.config(text="Invalid input")
 
-    def fahrenheit_to_celsius(self):
+    def fahrenheit_to_celsius(self) -> None:
         try:
             fahrenheit = float(self.fahrenheit_entry.get())
-            celsius = (fahrenheit * ureg.degF).to(ureg.degC).magnitude
+            celsius = (fahrenheit - 32) * 5 / 9
             self.fahrenheit_result_label.config(text=f"{fahrenheit}°F is equal to {celsius}°C")
         except ValueError:
             self.fahrenheit_result_label.config(text="Invalid input")
 
-    def fahrenheit_to_kelvin(self):
+    def fahrenheit_to_kelvin(self) -> None:
         try:
             fahrenheit = float(self.fahrenheit_entry.get())
-            kelvin = (fahrenheit * ureg.degF).to(ureg.kelvin).magnitude
+            kelvin = (fahrenheit - 32) * 5 / 9 + 273.15
             self.fahrenheit_result_label.config(text=f"{fahrenheit}°F is equal to {kelvin}K")
         except ValueError:
             self.fahrenheit_result_label.config(text="Invalid input")
 
-    def kelvin_to_celsius(self):
+    def kelvin_to_celsius(self) -> None:
         try:
             kelvin = float(self.kelvin_entry.get())
-            celsius = (kelvin * ureg.kelvin).to(ureg.degC).magnitude
+            celsius = kelvin - 273.15
             self.kelvin_result_label.config(text=f"{kelvin}K is equal to {celsius}°C")
         except ValueError:
             self.kelvin_result_label.config(text="Invalid input")
 
-    def kelvin_to_fahrenheit(self):
+    def kelvin_to_fahrenheit(self) -> None:
         try:
             kelvin = float(self.kelvin_entry.get())
-            fahrenheit = (kelvin * ureg.kelvin).to(ureg.degF).magnitude
+            fahrenheit = (kelvin - 273.15) * 9 / 5 + 32
             self.kelvin_result_label.config(text=f"{kelvin}K is equal to {fahrenheit}°F")
         except ValueError:
             self.kelvin_result_label.config(text="Invalid input")

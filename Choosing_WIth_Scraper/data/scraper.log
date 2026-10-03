@@ -1,0 +1,4 @@
+2026-10-01 17:54:46,088 - INFO - Scheduled daily scraping of https://your-site.com at 08:00
+2026-10-01 17:54:46,307 - INFO - Scraping https://your-site.com
+2026-10-01 17:54:50,515 - INFO - Done! Titles: 0, Links: 13, Images: 2
+2026-10-01 17:54:56,547 - INFO - Stopped by user

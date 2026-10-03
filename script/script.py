@@ -1,0 +1,162 @@
+from __future__ import print_function
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+import pickle
+import os.path
+
+SCOPES = [
+    'https://www.googleapis.com/auth/forms.body',
+    'https://www.googleapis.com/auth/forms.responses.readonly'
+]
+
+def get_service():
+    """Auth and return forms service"""
+    creds = None
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            if not os.path.exists('credentials.json'):
+                print("[ERROR] credentials.json not found. Download it from Google Cloud Console.")
+                return None
+            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    return build('forms', 'v1', credentials=creds)
+
+def create_form(service, title, description=""):
+    form_body = {
+        "info": {
+            "title": title,
+            "documentTitle": title
+        }
+    }
+    if description:
+        form_body["info"]["description"] = description
+        
+    result = service.forms().create(body=form_body).execute()
+    form_id = result["formId"]
+    print(f"[CREATED] Form: {title} | ID: {form_id}")
+    print(f"URL: https://docs.google.com/forms/d/{form_id}/edit")
+    return form_id
+
+def add_questions_batch(service, form_id, questions):
+    """
+    questions = [
+        {"type": "text", "title": "What is your name?"},
+        {"type": "multiple_choice", "title": "Favorite language?", "options": ["Python", "JS", "Go"]},
+        {"type": "checkbox", "title": "Skills?", "options": ["AI", "Web", "Cloud"]},
+    ]
+    """
+    requests = []
+    for index, q in enumerate(questions):
+        item = {
+            "title": q["title"],
+            "questionItem": {
+                "question": {
+                    "required": q.get("required", True)
+                }
+            }
+        }
+
+        q_type = q["type"]
+        if q_type == "text":
+            item["questionItem"]["question"]["textQuestion"] = {}
+        elif q_type == "paragraph":
+            item["questionItem"]["question"]["textQuestion"] = {"paragraph": True}
+        elif q_type == "multiple_choice":
+            item["questionItem"]["question"]["choiceQuestion"] = {
+                "type": "RADIO",
+                "options": [{"value": opt} for opt in q.get("options", ["Option 1", "Option 2"])]
+            }
+        elif q_type == "checkbox":
+            item["questionItem"]["question"]["choiceQuestion"] = {
+                "type": "CHECKBOX",
+                "options": [{"value": opt} for opt in q.get("options", ["Option 1"])]
+            }
+        elif q_type == "dropdown":
+            item["questionItem"]["question"]["choiceQuestion"] = {
+                "type": "DROP_DOWN",
+                "options": [{"value": opt} for opt in q.get("options", ["Option 1"])]
+            }
+
+        requests.append({
+            "createItem": {
+                "item": item,
+                "location": {"index": index}
+            }
+        })
+
+    body = {"requests": requests}
+    service.forms().batchUpdate(formId=form_id, body=body).execute()
+    print(f"[ADDED] {len(questions)} questions")
+
+def update_form_info(service, form_id, title=None, description=None):
+    # Correct way: use batchUpdate with updateFormInfo
+    requests = []
+    if title or description:
+        info = {}
+        if title:
+            info["title"] = title
+            info["documentTitle"] = title
+        if description:
+            info["description"] = description
+
+        requests.append({
+            "updateFormInfo": {
+                "info": info,
+                "updateMask": ",".join(info.keys())
+            }
+        })
+        service.forms().batchUpdate(formId=form_id, body={"requests": requests}).execute()
+        print(f"[UPDATED] {info}")
+
+def get_responses(service, form_id):
+    responses = []
+    page_token = None
+    while True:
+        resp = service.forms().responses().list(formId=form_id, pageToken=page_token).execute()
+        responses.extend(resp.get("responses", []))
+        page_token = resp.get("nextPageToken")
+        if not page_token:
+            break
+    
+    print(f"[INFO] Total responses: {len(responses)}")
+    for r in responses[:5]: # show first 5
+        print(r)
+    return responses
+
+def main():
+    service = get_service()
+    if not service:
+        return
+
+    # 1. Create form
+    form_id = create_form(
+        service, 
+        title="Advanced Sample Form Created via API",
+        description="This form was auto-generated by Python"
+    )
+
+    # 2. Add questions in ONE batch (much faster)
+    questions = [
+        {"type": "text", "title": "What is your full name?"},
+        {"type": "text", "title": "What is your email?"},
+        {"type": "multiple_choice", "title": "How did you hear about us?", "options": ["Google", "Friend", "LinkedIn", "Other"]},
+        {"type": "checkbox", "title": "What are you interested in?", "options": ["Python", "AI/ML", "Web Dev", "Cloud"]},
+        {"type": "paragraph", "title": "Any additional feedback?"},
+    ]
+    add_questions_batch(service, form_id, questions)
+
+    # 3. Get responses (will be 0 for new form)
+    # get_responses(service, form_id)
+
+if __name__ == '__main__':
+    main()

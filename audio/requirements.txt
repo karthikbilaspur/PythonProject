@@ -1,0 +1,5 @@
+librosa
+matplotlib
+numpy
+SpeechRecognition
+pyaudio; sys_platform != "win32"

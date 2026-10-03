@@ -1,4 +1,5 @@
-Ubuntu Scraper README
+# Ubuntu Scraper README
+
 This script scrapes information from the Ubuntu website using Python's requests and BeautifulSoup libraries.
 Features
 Scrapes news articles from the Ubuntu blog
