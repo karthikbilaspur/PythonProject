@@ -1,0 +1,16 @@
+<!doctype html>
+<html><head><title>Dashboard</title>
+<style>body{font-family:Arial;max-width:900px;margin:20px auto}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ddd;padding:8px}</style>
+</head><body>
+<h2>Welcome {{ name }} | <a href="/logout">Logout</a></h2>
+<h3>Upload Photos to Clean</h3>
+<form method="post" enctype="multipart/form-data">
+<input type="file" name="files" multiple accept="image/*" required>
+<button type="submit">Upload & Process</button>
+</form>
+{% with messages = get_flashed_messages() %}{% if messages %}<p style="color:green">{{ messages[0] }}</p>{% endif %}{% endwith %}
+<h3>Recent Jobs</h3>
+<table><tr><th>File</th><th>Result</th><th>Reason</th><th>Date</th></tr>
+{% for j in jobs %}<tr><td>{{ j.filename }}</td><td>{{ j.result }}</td><td>{{ j.emotion }}</td><td>{{ j.processed_at }}</td></tr>{% endfor %}
+</table>
+</body></html>

@@ -1,0 +1,7 @@
+streamlit
+dnspython
+google-generativeai
+openai
+psycopg2-binary
+pandas
+python-dotenv

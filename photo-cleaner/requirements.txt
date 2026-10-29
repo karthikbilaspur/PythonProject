@@ -1,0 +1,10 @@
+Flask
+Flask-SQLAlchemy
+Werkzeug
+python-dotenv
+opencv-python
+Pillow
+face-recognition
+numpy
+pytest
+email-validator

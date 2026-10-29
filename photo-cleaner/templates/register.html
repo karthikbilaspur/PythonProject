@@ -1,0 +1,15 @@
+<!doctype html>
+<html><head><title>Register</title>
+<style>body{font-family:Arial;max-width:400px;margin:50px auto}input{width:100%;padding:10px;margin:5px 0}button{padding:10px 20px;width:100%}</style>
+</head><body>
+<h2>Register</h2>
+{% with messages = get_flashed_messages() %}{% if messages %}<p style="color:red">{{ messages[0] }}</p>{% endif %}{% endwith %}
+<form method="post">
+<input name="name" placeholder="Full Name" required>
+<input name="username" placeholder="Username" required>
+<input name="email" type="email" placeholder="Email" required>
+<input name="password" type="password" placeholder="Password (min 6)" required>
+<button type="submit">Create Account</button>
+</form>
+<p>Already have account? <a href="/login">Login</a></p>
+</body></html>
