@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 import time
 from fpdf import FPDF
@@ -13,7 +14,7 @@ driver_path = input("Enter chrome driver path: ")
 url = f'https://medium.com/search?q={topic}'
 
 # Initiating the webdriver
-driver = webdriver.Chrome(driver_path)
+driver = webdriver.Chrome(service=Service(executable_path=driver_path))
 driver.get(url)
 
 # Ensure the page is loaded
@@ -28,7 +29,11 @@ articles = soup.find_all('div', class_='section-content')
 count = 0
 for article in articles:
     try:
-        link = article.find('a')['href']
+        anchor = article.find('a')
+        link = anchor.get('href') if anchor is not None else None
+        if not isinstance(link, str):
+            continue
+
         if link.startswith('https://medium.com/'):
             article_url = link
         else:
@@ -41,7 +46,10 @@ for article in articles:
         article_soup = BeautifulSoup(article_html, "html.parser")
 
         # Extract title
-        title = article_soup.find('title').text.strip()
+        title_tag = article_soup.find('title')
+        if title_tag is None:
+            continue
+        title = title_tag.get_text(strip=True)
 
         # Extract content
         content = article_soup.find_all('p')
@@ -51,8 +59,8 @@ for article in articles:
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font("Arial", size=12)
-        pdf.cell(200, 10, txt=title, ln=1, align='C')
-        pdf.multi_cell(0, 5, txt=article_content, align='L')
+        pdf.cell(200, 10, text=title, ln=1, align='C')
+        pdf.multi_cell(0, 5, text=article_content, align='L')  # type: ignore[reportUnknownMemberType]
 
         # Save PDF
         pdf_title = ''.join(e for e in title if e.isalnum())

@@ -1,10 +1,15 @@
 # Import required libraries
 import requests
-from decouple import config
+import importlib
 import xml.etree.ElementTree as ET
+from collections.abc import Callable
+from typing import cast
+
+# Load decouple dynamically because it does not provide type stubs.
+config = cast(Callable[[str], str], getattr(importlib.import_module('decouple'), 'config'))
 
 # Function to check domain availability
-def check_domain_availability(domain_name):
+def check_domain_availability(domain_name: str) -> str:
     """
     Checks if a domain is available using Dynadot's API.
 
@@ -51,7 +56,7 @@ def check_domain_availability(domain_name):
         return f"Failed to parse API response for {domain_name}: {e}"
 
 # Function to suggest alternative domain names
-def suggest_alternative_domains(domain_name):
+def suggest_alternative_domains(domain_name: str):
     """
     Suggests alternative domain names based on the input domain.
 
@@ -65,7 +70,6 @@ def suggest_alternative_domains(domain_name):
     # Split the domain name into parts (name and extension)
     parts = domain_name.split('.')
     name = '.'.join(parts[:-1])
-    extension = parts[-1]
 
     # Suggest alternative domain names with different extensions
     alternatives = [

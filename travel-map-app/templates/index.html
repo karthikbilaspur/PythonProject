@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Travel Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,sans-serif;background:#0f172a;color:#e2e8f0}
+  header{padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+  header h1{margin:0;font-size:24px} header p{margin:4px 0 0;color:#94a3b8;font-size:14px}
+  .badge{background:#22c55e;color:#04120a;padding:6px 12px;border-radius:999px;font-weight:700;font-size:13px}
+  .wrap{display:grid;grid-template-columns:360px 1fr;gap:16px;padding:0 16px 16px;height:calc(100vh - 86px)}
+  .card{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:16px;overflow:auto}
+  input,select,textarea{width:100%;padding:11px 12px;margin-top:6px;background:#0f172a;border:1px solid #334155;border-radius:10px;color:white;outline:none}
+  label{font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em}
+  button{width:100%;padding:12px;border:0;border-radius:10px;background:#22c55e;color:#04120a;font-weight:800;cursor:pointer;margin-top:12px}
+  button:hover{background:#4ade80}
+  .place{background:#0f172a;border:1px solid #334155;border-radius:12px;padding:12px;margin-top:10px}
+  .place b{font-size:15px} .place small{color:#94a3b8;display:block;margin-top:4px;line-height:1.4}
+  .pill{display:inline-block;background:#334155;padding:3px 8px;border-radius:999px;font-size:11px;margin-top:6px}
+  .del{background:none;color:#f87171;width:auto;padding:0;margin:8px 0 0;font-size:12px;cursor:pointer}
+  #map{border-radius:16px;overflow:hidden;border:1px solid #334155;min-height:400px}
+  .error{background:#7f1d1d;padding:10px;border-radius:10px;font-size:13px;margin-bottom:12px}
+  @media(max-width:800px){.wrap{grid-template-columns:1fr;height:auto} #map{height:420px}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🗺️ My Travel Map</h1><p>Add places YOU visited. All data is yours, saved locally.</p></div>
+  <div class="badge">{{ count }} places</div>
+</header>
+<div class="wrap">
+  <div class="card">
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form method="POST" action="/add">
+      <label>Place Name *</label>
+      <input name="name" placeholder="e.g. Lalbagh, Bangalore" required>
+      <label style="margin-top:12px;display:block">Category</label>
+      <select name="category"><option>Visited</option><option>Wishlist</option><option>Home Town</option><option>Food Spot</option><option>Hidden Gem</option></select>
+      <label style="margin-top:12px;display:block">Date Visited</label>
+      <input type="date" name="date_visited">
+      <label style="margin-top:12px;display:block">Your Notes</label>
+      <textarea name="notes" rows="3" placeholder="What was special? Who were you with?"></textarea>
+      <button type="submit">+ Add to My Map</button>
+    </form>
+    <h3 style="margin:22px 0 0">Your Places</h3>
+    {% for p in places %}
+    <div class="place">
+      <b>{{ p.name }}</b>
+      <small>{{ p.display_name }}</small>
+      {% if p.date_visited %}<small>📅 {{ p.date_visited }}</small>{% endif %}
+      {% if p.notes %}<small>📝 {{ p.notes }}</small>{% endif %}
+      <span class="pill">{{ p.category }}</span><br>
+      <form method="POST" action="/delete/{{ p.id }}" onsubmit="return confirm('Delete this place?')"><button class="del" type="submit">Delete ✕</button></form>
+    </div>
+    {% else %}<p style="color:#94a3b8;font-size:14px">No places yet. Add your first one above!</p>{% endfor %}
+  </div>
+  <div id="map"></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const places = {{ places|tojson }};
+  const map = L.map('map').setView([12.9716, 77.5946], 6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19, attribution:'© OpenStreetMap contributors'}).addTo(map);
+  const bounds = [];
+  places.forEach(p=>{
+    const m = L.marker([p.lat,p.lng]).addTo(map);
+    m.bindPopup(`<b>${p.name}</b><br>${p.display_name}<br>${p.date_visited||''}<br>${p.notes||''}<br><i>${p.category}</i>`);
+    bounds.push([p.lat,p.lng]);
+  });
+  if(bounds.length>0) map.fitBounds(bounds,{padding:[40,40]});
+</script>
+</body>
+</html>
