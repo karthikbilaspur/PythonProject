@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather + AQI</title>
+    <style>
+        body { font-family: sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; background: #f5f5f5; }
+        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .big { font-size: 48px; font-weight: bold; }
+        .aqi-good { border-left: 6px solid #2ecc71; }
+        .aqi-moderate { border-left: 6px solid #f39c12; }
+        .aqi-sensitive { border-left: 6px solid #ff8c00; }
+        .aqi-unhealthy { border-left: 6px solid #e74c3c; }
+        .aqi-very-unhealthy { border-left: 6px solid #8e44ad; }
+        .forecast { display: flex; gap: 10px; overflow-x: auto; }
+        .day { background: #eef; padding: 10px; border-radius: 8px; min-width: 110px; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>🌦️ Weather + Air Quality</h1>
+
+    <form method="POST" class="card">
+        <select name="city">
+            {% for c in cities %}
+            <option value="{{c}}" {% if c==selected %}selected{% endif %}>{{c}}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Check</button>
+    </form>
+
+    {% if error %}<div class="card" style="color:red">{{error}}</div>{% endif %}
+
+    {% if data %}
+    <div class="card">
+        <h2>{{ data.city }} - {{ data.condition }}</h2>
+        <div class="big">{{ data.temp }}°C</div>
+        <p>Feels like {{ data.feels_like }}°C | Humidity {{ data.humidity }}% | Wind {{ data.wind }} km/h</p>
+    </div>
+
+    <div class="card" style="border-left: 6px solid {{ data.advice_color }}">
+        <h3>Air Quality: US AQI {{ data.aqi }}</h3>
+        <p>PM2.5: {{ data.pm25 }} µg/m³ | PM10: {{ data.pm10 }} µg/m³</p>
+        <strong>{{ data.advice }}</strong>
+    </div>
+
+    <div class="card">
+        <h3>7-Day Forecast</h3>
+        <div class="forecast">
+            {% for date, max, min, rain in data.forecast %}
+            <div class="day">
+                <div>{{ date }}</div>
+                <div><b>{{ max }}° / {{ min }}°</b></div>
+                <div>🌧️ {{ rain }}%</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</body>
+</html>
