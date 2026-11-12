@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FACEVISION — Face Verification</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="container">
+    <header>
+      <p class="eyebrow">COMPUTER VISION PROJECT</p>
+      <h1>FACEVISION</h1>
+      <p class="subtitle">Compare two consented images with a pretrained face-verification model.</p>
+    </header>
+
+    <form id="compare-form">
+      <div class="upload-grid">
+        <label class="upload-card">
+          <span class="upload-title">Image 1</span>
+          <span class="preview" id="preview1">Choose a photo</span>
+          <input type="file" name="file1" id="file1" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required>
+        </label>
+        <label class="upload-card">
+          <span class="upload-title">Image 2</span>
+          <span class="preview" id="preview2">Choose a photo</span>
+          <input type="file" name="file2" id="file2" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required>
+        </label>
+      </div>
+      <button id="submit-button" type="submit">Compare faces</button>
+    </form>
+
+    <section id="result" class="result hidden" aria-live="polite"></section>
+    <p class="privacy-note">
+      Use only images you have permission to process. Images are processed for this request
+      and are not intentionally saved by this demo. A match score is not proof of identity.
+    </p>
+  </main>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

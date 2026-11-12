@@ -1,0 +1,5 @@
+Flask>=3.0,<4.0
+deepface>=0.0.90
+opencv-python>=4.8
+Pillow>=10.0
+numpy>=1.24

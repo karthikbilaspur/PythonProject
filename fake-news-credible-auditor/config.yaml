@@ -1,0 +1,31 @@
+# Every key is optional: values here are merged over the built-in defaults.
+model:
+  name: mrm8488/bert-tiny-finetuned-fake-news-detection
+  # Labels that mean "real". VERIFY against the model card before trusting output;
+  # if this mapping is backwards every content verdict is flipped.
+  real_labels: [LABEL_1]
+  max_confidence: 0.6      # text classifiers are weak evidence, so cap their influence
+  chunk_words: 300
+  overlap_words: 50
+  max_chunks: 8
+
+fetch:
+  timeout: 15
+  max_bytes: 5000000
+
+extraction:
+  min_text_chars: 200
+
+weights:
+  content_model: 1.0
+  source: 1.5
+  citations: 0.5
+
+scoring:
+  min_evidence: 0.3        # below this total evidence weight -> INSUFFICIENT_EVIDENCE
+  unreliable_below: 0.4
+  questionable_below: 0.7
+
+domains:
+  trusted: [reuters.com, apnews.com, bbc.com, bbc.co.uk, npr.org, wikipedia.org]
+  suspicious: [infowars.com, beforeitsnews.com, worldnewsdailyreport.com, naturalnews.com]

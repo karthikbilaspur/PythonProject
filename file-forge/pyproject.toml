@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fileforge"
+version = "0.1.0"
+description = "A safe-by-default file toolkit: organize, dedupe, vault, carve, search, fetch, watch, integrity"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.12",
+    "rich>=13.7",
+    "cryptography>=42",
+    "httpx>=0.27",
+    "watchdog>=4.0",
+    "pyyaml>=6.0",
+    "numpy>=1.26",
+    "Pillow>=10.0",
+]
+
+[project.optional-dependencies]
+search = ["sentence-transformers>=3.0"]      # dense embeddings for semantic search
+docs = ["pypdf>=4.0", "python-docx>=1.1"]    # PDF / DOCX text extraction
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+fileforge = "fileforge.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
