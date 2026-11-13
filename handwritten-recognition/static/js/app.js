@@ -1,0 +1,12 @@
+const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,280,280);ctx.strokeStyle='#000';ctx.lineWidth=18;ctx.lineCap='round';let drawing=false;
+function pos(e){const r=canvas.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return [t.clientX-r.left,t.clientY-r.top];}
+canvas.addEventListener('mousedown',e=>{drawing=true;const [x,y]=pos(e);ctx.beginPath();ctx.moveTo(x,y);});
+canvas.addEventListener('mousemove',e=>{if(!drawing)return;const [x,y]=pos(e);ctx.lineTo(x,y);ctx.stroke();});
+window.addEventListener('mouseup',()=>drawing=false);
+canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const [x,y]=pos(e);ctx.beginPath();ctx.moveTo(x,y);},{passive:false});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const [x,y]=pos(e);ctx.lineTo(x,y);ctx.stroke();},{passive:false});
+canvas.addEventListener('touchend',()=>drawing=false);
+document.getElementById('clearBtn').onclick=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,280,280);document.getElementById('prediction').textContent='Draw something...';document.getElementById('top3').textContent='';};
+function showResult(data){if(data.error){document.getElementById('prediction').textContent='Error: '+data.error;return;}document.getElementById('prediction').textContent=data.prediction+' - '+(data.confidence*100).toFixed(1)+'%';document.getElementById('top3').textContent=data.top3.map(t=>t.label+' '+(t.confidence*100).toFixed(1)+'%').join('  |  ');}
+document.getElementById('predictBtn').onclick=async()=>{const img=ctx.getImageData(0,0,280,280).data;const gray=[];for(let i=0;i<img.length;i+=4)gray.push(img[i]);const tmp=document.createElement('canvas');tmp.width=280;tmp.height=280;tmp.getContext('2d').drawImage(canvas,0,0);const pctx=document.getElementById('preview').getContext('2d');pctx.imageSmoothingEnabled=false;pctx.drawImage(tmp,0,0,28,28);const mode=document.getElementById('mode').value;const res=await fetch('/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:gray,mode})});showResult(await res.json());};
+document.getElementById('fileInput').onchange=async(e)=>{const f=e.target.files[0];if(!f)return;const fd=new FormData();fd.append('file',f);fd.append('mode',document.getElementById('mode').value);const res=await fetch('/predict-file',{method:'POST',body:fd});showResult(await res.json());};

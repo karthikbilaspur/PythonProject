@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Handwritten Recognition</title><link rel="stylesheet" href="/static/css/style.css"></head>
+<body><main>
+<h1>Handwritten Recognition</h1><p>Draw a digit (0-9) or letter (A-Z)</p>
+<div class="controls">
+<label>Mode <select id="mode"><option value="combined" selected>Digits + Letters</option><option value="digits">Digits only</option><option value="letters">Letters only</option></select></label>
+<button id="clearBtn">Clear</button><button id="predictBtn">Predict</button>
+<label class="upload">Upload image <input type="file" id="fileInput" accept="image/*" hidden></label>
+</div>
+<canvas id="canvas" width="280" height="280"></canvas>
+<div id="result"><div id="prediction">Draw something...</div><div id="top3"></div></div>
+<canvas id="preview" width="28" height="28"></canvas><p class="hint">Right: 28x28 preview - what the model actually sees</p>
+</main><script src="/static/js/app.js"></script></body></html>

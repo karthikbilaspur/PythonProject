@@ -1,0 +1,9 @@
+flask==3.1.0
+tensorflow==2.18.0
+tensorflow-datasets==4.9.6
+numpy==1.26.4
+Pillow==10.4.0
+opencv-python-headless==4.10.0.84
+pytest==8.3.4
+pytest-cov==2.1.0
+python-dotenv==2.0.1
