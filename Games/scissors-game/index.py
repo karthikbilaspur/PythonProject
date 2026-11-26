@@ -14,10 +14,11 @@ Features:
 """
 
 import random
+from typing import Any
 
 # ---------------- Game Definitions ----------------
 
-GAMES = {
+GAMES: dict[str, dict[str, Any]] = {
     "1": {
         "name": "Rock Paper Scissors Lizard Spock",
         "choices": ['rock', 'paper', 'scissors', 'lizard', 'spock'],
@@ -68,7 +69,7 @@ GAMES = {
 
 # ---------------- Core Logic ----------------
 
-def decide_winner(user_choice, computer_choice, beats):
+def decide_winner(user_choice: str, computer_choice: str, beats: dict[str, list[str]]) -> str:
     """Returns 'tie', 'win' or 'lose' - same logic as your original files."""
     if user_choice == computer_choice:
         return 'tie'
@@ -77,11 +78,11 @@ def decide_winner(user_choice, computer_choice, beats):
     return 'lose'
 
 
-def get_win_line(winner, loser, win_lines):
+def get_win_line(winner: str, loser: str, win_lines: dict[tuple[str, str], str]) -> str:
     return win_lines.get((winner, loser), f"{winner.capitalize()} beats {loser}")
 
 
-def show_score(score, history):
+def show_score(score: dict[str, int], history: list[str]) -> None:
     print(f"\n--- SCORE --- You: {score['win']} | Computer: {score['lose']} | Ties: {score['tie']}")
     if history:
         print("Last 5 rounds:")
@@ -89,7 +90,7 @@ def show_score(score, history):
             print(f"  {h}")
 
 
-def play_game(game):
+def play_game(game: dict[str, Any]) -> dict[str, int]:
     choices = game["choices"]
     beats = game["beats"]
     win_lines = game["win_lines"]
@@ -99,7 +100,7 @@ def play_game(game):
     print("Type 'q' to quit, 's' for score\n")
 
     score = {'win': 0, 'lose': 0, 'tie': 0}
-    history = []
+    history: list[str] = []
     round_no = 1
 
     while True:

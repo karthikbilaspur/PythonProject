@@ -1,0 +1,4 @@
+pandas
+matplotlib
+alpha_vantage
+requests
