@@ -1,0 +1,6 @@
+nltk
+wordcloud
+matplotlib
+pandas
+gspread
+google-auth
