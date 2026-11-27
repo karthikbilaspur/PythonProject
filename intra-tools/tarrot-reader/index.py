@@ -1,4 +1,7 @@
-"The Fool": "Experience is your best teacher",
+import random
+
+TAROT_DECK = {
+    "The Fool": "Experience is your best teacher",
     "The Magician": "Life is Magic... do you control yours?",
     "The High Priestess": "Stay away from worldly affairs",
     "The Empress": "The world bows before you, you bow to none",
@@ -11,7 +14,7 @@
     "Wheel of Fortune": "Your luck today depends on whether the first living thing you see is a plant or an animal",
     "Justice": "The Mills of God grind slow but fine",
     "The Hanged Man": "That's rough buddy",
-    "Death": "Life's younger sibling brushed your shoulder just now, but you're fine- it was just lint",
+    "Death": "Life's younger sibling brushed your shoulder just now, but you're fine - it was just lint",
     "Temperance": "The World needs more of it, and of you",
     "The Devil": "Get over here so I can prove that you exist",
     "The Tower": "Exchange places with the king",
@@ -77,3 +80,81 @@
     "Queen of Coins": "You're worth your weight in gold",
     "King of Coins": "You're worth your weight in gold",
 }
+
+def pause(prompt: str = ">> press enter"):
+    input(prompt)
+
+def draw_cards(deck: dict[str, str], num_cards: int) -> list[tuple[str, str]]:
+    names = random.sample(list(deck.keys()), num_cards)
+    return [(name, deck[name]) for name in names]
+
+def print_card(name: str, meaning: str) -> None:
+    print(f"  --- {name} ---")
+    print(f"  {meaning}")
+
+def youve_chosen_yes(deck: dict[str, str]) -> None:
+    print("I see that you've chosen to divine your future....")
+    pause()
+    print("Let's make haste then...")
+    pause()
+    print("Neither fame nor fortune wait for man")
+    pause()
+    print("\nYou have drawn three cards\n")
+    cards = draw_cards(deck, 3)
+    labels = ["first", "second", "third"]
+    for i, (name, meaning) in enumerate(cards):
+        print(f"Your {labels[i]} card is...")
+        print_card(name, meaning)
+        pause()
+        print()
+
+def youve_chosen_no():
+    print("Are you wise...")
+    pause()
+    print("Or foolish?")
+    pause()
+    print("I suppose only time will tell")
+    pause()
+
+def youve_chosen_neither():
+    print("*le sigh*")
+    pause()
+    print("I suppose you think this is a game...")
+    pause()
+    print("You wouldn't be wrong...")
+    pause()
+    print("But the only thing that you've played...")
+    pause()
+    print("Is yourself.")
+    pause()
+    print("\nNever gonna give you up,\nNever gonna let you down,\nNever gonna run around and desert you.\nNever gonna make you cry,\nNever gonna say goodbye,\nNever gonna tell a lie and hurt you.\n")
+
+def main():
+    deck = TAROT_DECK
+    print("In this black box, you read white words")
+    pause()
+    print("Words that might warn you of danger...")
+    pause()
+    print("Words that might foretell great fortune...")
+    pause()
+    print("Or words that might make you laugh")
+    pause()
+    print("\nDo you dare draw a card?")
+    ch = input(">> enter Y/n: ").strip()
+    print("\nInteresting...")
+    if ch.lower() == 'y':
+        youve_chosen_yes(deck)
+    elif ch.lower() == 'n':
+        youve_chosen_no()
+    else:
+        youve_chosen_neither()
+    print("Whichever your choice was...")
+    pause()
+    print("May the cards ever be in your favour")
+    pause()
+    print()
+    print("\x1B[3mFin\x1B[23m".center(72))
+    print("*" * 72)
+
+if __name__ == "__main__":
+    main()
